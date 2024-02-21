@@ -1,10 +1,9 @@
 {
-  "name": "material-kit-react",
+  "name": "Shofy Admin Dashboard",
   "version": "3.0.0",
-  "author": "Devias",
+  "author": "Surendiran",
   "licence": "MIT",
-  "homepage": "https://devias.io",
-  "private": false,
+  "private": true,
   "scripts": {
     "dev": "next",
     "build": "next build",
