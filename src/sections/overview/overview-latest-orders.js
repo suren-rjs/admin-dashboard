@@ -18,12 +18,7 @@ import {
 import { Scrollbar } from 'src/components/scrollbar';
 import { SeverityPill } from 'src/components/severity-pill';
 import { useRouter } from "next/router";
-
-const statusMap = {
-  pending: "warning",
-  delivered: "success",
-  refunded: "error",
-};
+import { appCOnstants } from 'src/utils/constants';
 
 export const OverviewLatestOrders = (props) => {
   const { orders = [], sx } = props;
@@ -52,12 +47,13 @@ export const OverviewLatestOrders = (props) => {
                 const createdAt = format(order.createdAt, "dd/MM/yyyy");
 
                 return (
+                  // eslint-disable-next-line react/jsx-max-props-per-line
                   <TableRow hover key={order.id}>
                     <TableCell>{order.ref}</TableCell>
                     <TableCell>{order.customer.name}</TableCell>
                     <TableCell>{createdAt}</TableCell>
                     <TableCell>
-                      <SeverityPill color={statusMap[order.status]}>{order.status}</SeverityPill>
+                      <SeverityPill color={appCOnstants.statusMap[order.status]}>{order.status}</SeverityPill>
                     </TableCell>
                   </TableRow>
                 );
