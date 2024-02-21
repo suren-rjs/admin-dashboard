@@ -1,15 +1,13 @@
 import { useCallback, useMemo, useState } from 'react';
 import Head from 'next/head';
 import { subDays, subHours } from 'date-fns';
-import ArrowDownOnSquareIcon from '@heroicons/react/24/solid/ArrowDownOnSquareIcon';
-import ArrowUpOnSquareIcon from '@heroicons/react/24/solid/ArrowUpOnSquareIcon';
 import PlusIcon from '@heroicons/react/24/solid/PlusIcon';
 import { Box, Button, Container, Stack, SvgIcon, Typography } from '@mui/material';
 import { useSelection } from 'src/hooks/use-selection';
 import { Layout as DashboardLayout } from 'src/layouts/dashboard/layout';
-import { CustomersTable } from 'src/sections/customer/customers-table';
-import { CustomersSearch } from 'src/sections/customer/customers-search';
 import { applyPagination } from 'src/utils/apply-pagination';
+import { ProductsSearch } from 'src/sections/products/products-search';
+import { ProductsTable } from 'src/sections/products/products-table';
 
 const now = new Date();
 
@@ -156,7 +154,7 @@ const data = [
   }
 ];
 
-const useCustomers = (page, rowsPerPage) => {
+const useProducts = (page, rowsPerPage) => {
   return useMemo(
     () => {
       return applyPagination(data, page, rowsPerPage);
@@ -165,21 +163,21 @@ const useCustomers = (page, rowsPerPage) => {
   );
 };
 
-const useCustomerIds = (customers) => {
+const useOrderIds = (products) => {
   return useMemo(
     () => {
-      return customers.map((customer) => customer.id);
+      return products.map((order) => order.id);
     },
-    [customers]
+    [products]
   );
 };
 
 const Page = () => {
   const [page, setPage] = useState(0);
   const [rowsPerPage, setRowsPerPage] = useState(5);
-  const customers = useCustomers(page, rowsPerPage);
-  const customersIds = useCustomerIds(customers);
-  const customersSelection = useSelection(customersIds);
+  const products = useProducts(page, rowsPerPage);
+  const productsIds = useOrderIds(products);
+  const productsSelection = useSelection(productsIds);
 
   const handlePageChange = useCallback(
     (event, value) => {
@@ -199,7 +197,7 @@ const Page = () => {
     <>
       <Head>
         <title>
-          Customers | Shofy jewellery
+          Products | Shofy jewellery
         </title>
       </Head>
       <Box
@@ -218,7 +216,7 @@ const Page = () => {
             >
               <Stack spacing={1}>
                 <Typography variant="h4">
-                  Customers
+                  Products
                 </Typography>
                 <Stack
                   alignItems="center"
@@ -240,19 +238,19 @@ const Page = () => {
                 </Button>
               </div>
             </Stack>
-            <CustomersSearch />
-            <CustomersTable
+            <ProductsSearch />
+            <ProductsTable
               count={data.length}
-              items={customers}
-              onDeselectAll={customersSelection.handleDeselectAll}
-              onDeselectOne={customersSelection.handleDeselectOne}
+              items={products}
+              onDeselectAll={productsSelection.handleDeselectAll}
+              onDeselectOne={productsSelection.handleDeselectOne}
               onPageChange={handlePageChange}
               onRowsPerPageChange={handleRowsPerPageChange}
-              onSelectAll={customersSelection.handleSelectAll}
-              onSelectOne={customersSelection.handleSelectOne}
+              onSelectAll={productsSelection.handleSelectAll}
+              onSelectOne={productsSelection.handleSelectOne}
               page={page}
               rowsPerPage={rowsPerPage}
-              selected={customersSelection.selected}
+              selected={productsSelection.selected}
             />
           </Stack>
         </Container>

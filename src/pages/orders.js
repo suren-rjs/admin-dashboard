@@ -1,15 +1,13 @@
 import { useCallback, useMemo, useState } from 'react';
 import Head from 'next/head';
 import { subDays, subHours } from 'date-fns';
-import ArrowDownOnSquareIcon from '@heroicons/react/24/solid/ArrowDownOnSquareIcon';
-import ArrowUpOnSquareIcon from '@heroicons/react/24/solid/ArrowUpOnSquareIcon';
 import PlusIcon from '@heroicons/react/24/solid/PlusIcon';
 import { Box, Button, Container, Stack, SvgIcon, Typography } from '@mui/material';
 import { useSelection } from 'src/hooks/use-selection';
 import { Layout as DashboardLayout } from 'src/layouts/dashboard/layout';
-import { CustomersTable } from 'src/sections/customer/customers-table';
-import { CustomersSearch } from 'src/sections/customer/customers-search';
 import { applyPagination } from 'src/utils/apply-pagination';
+import { OrdersTable } from 'src/sections/orders/orders-table';
+import { OrdersSearch } from 'src/sections/orders/orders-search';
 
 const now = new Date();
 
@@ -156,7 +154,7 @@ const data = [
   }
 ];
 
-const useCustomers = (page, rowsPerPage) => {
+const useOrders = (page, rowsPerPage) => {
   return useMemo(
     () => {
       return applyPagination(data, page, rowsPerPage);
@@ -165,21 +163,21 @@ const useCustomers = (page, rowsPerPage) => {
   );
 };
 
-const useCustomerIds = (customers) => {
+const useOrderIds = (orders) => {
   return useMemo(
     () => {
-      return customers.map((customer) => customer.id);
+      return orders.map((order) => order.id);
     },
-    [customers]
+    [orders]
   );
 };
 
 const Page = () => {
   const [page, setPage] = useState(0);
   const [rowsPerPage, setRowsPerPage] = useState(5);
-  const customers = useCustomers(page, rowsPerPage);
-  const customersIds = useCustomerIds(customers);
-  const customersSelection = useSelection(customersIds);
+  const orders = useOrders(page, rowsPerPage);
+  const ordersIds = useOrderIds(orders);
+  const ordersSelection = useSelection(ordersIds);
 
   const handlePageChange = useCallback(
     (event, value) => {
@@ -199,7 +197,7 @@ const Page = () => {
     <>
       <Head>
         <title>
-          Customers | Shofy jewellery
+          Orders | Shofy jewellery
         </title>
       </Head>
       <Box
@@ -218,7 +216,7 @@ const Page = () => {
             >
               <Stack spacing={1}>
                 <Typography variant="h4">
-                  Customers
+                  Orders
                 </Typography>
                 <Stack
                   alignItems="center"
@@ -240,19 +238,19 @@ const Page = () => {
                 </Button>
               </div>
             </Stack>
-            <CustomersSearch />
-            <CustomersTable
+            <OrdersSearch />
+            <OrdersTable
               count={data.length}
-              items={customers}
-              onDeselectAll={customersSelection.handleDeselectAll}
-              onDeselectOne={customersSelection.handleDeselectOne}
+              items={orders}
+              onDeselectAll={ordersSelection.handleDeselectAll}
+              onDeselectOne={ordersSelection.handleDeselectOne}
               onPageChange={handlePageChange}
               onRowsPerPageChange={handleRowsPerPageChange}
-              onSelectAll={customersSelection.handleSelectAll}
-              onSelectOne={customersSelection.handleSelectOne}
+              onSelectAll={ordersSelection.handleSelectAll}
+              onSelectOne={ordersSelection.handleSelectOne}
               page={page}
               rowsPerPage={rowsPerPage}
-              selected={customersSelection.selected}
+              selected={ordersSelection.selected}
             />
           </Stack>
         </Container>

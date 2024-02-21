@@ -13,31 +13,19 @@ import {
 
 const states = [
   {
-    value: 'alabama',
-    label: 'Alabama'
+    value: 'TN',
+    label: 'TN'
   },
-  {
-    value: 'new-york',
-    label: 'New York'
-  },
-  {
-    value: 'san-francisco',
-    label: 'San Francisco'
-  },
-  {
-    value: 'los-angeles',
-    label: 'Los Angeles'
-  }
 ];
 
 export const AccountProfileDetails = () => {
   const [values, setValues] = useState({
-    firstName: 'Anika',
-    lastName: 'Visser',
-    email: 'demo@devias.io',
+    firstName: 'suren',
+    lastName: 'R',
+    email: 'suren.rjs@gmail.com',
     phone: '',
-    state: 'los-angeles',
-    country: 'USA'
+    state: 'TN',
+    country: 'IN'
   });
 
   const handleChange = useCallback(
