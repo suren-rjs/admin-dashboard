@@ -1,5 +1,5 @@
 {
-  "name": "Shofy Admin Dashboard",
+  "name": "shofy-admin-dashboard",
   "version": "3.0.0",
   "author": "Surendiran",
   "licence": "MIT",
@@ -10,7 +10,8 @@
     "start": "next start",
     "export": "next export",
     "lint": "next lint",
-    "lint-fix": "next lint --fix"
+    "lint-fix": "next lint --fix",
+    "test": "npm ci"
   },
   "dependencies": {
     "@emotion/cache": "11.11.0",
