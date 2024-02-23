@@ -7,6 +7,7 @@ import UsersIcon from '@heroicons/react/24/solid/UsersIcon';
 import { SvgIcon } from '@mui/material';
 import CheckRoundIcon from "@rsuite/icons/CheckRound";
 import ProjectIcon from "@rsuite/icons/Project";
+import CouponIcon from "@rsuite/icons/Coupon";
 
 export const items = [
   {
@@ -33,6 +34,15 @@ export const items = [
     icon: (
       <SvgIcon fontSize="small">
         <ShoppingBagIcon />
+      </SvgIcon>
+    ),
+  },
+  {
+    title: "Coupons",
+    path: "/coupons",
+    icon: (
+      <SvgIcon fontSize="small">
+        <CouponIcon />
       </SvgIcon>
     ),
   },

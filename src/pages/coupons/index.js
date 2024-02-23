@@ -6,22 +6,27 @@ import { Box, Button, Container, Stack, SvgIcon, Typography } from "@mui/materia
 import { useSelection } from "src/hooks/use-selection";
 import { Layout as DashboardLayout } from "src/layouts/dashboard/layout";
 import { applyPagination } from "src/utils/apply-pagination";
-import { CategorySearch } from "src/sections/categories/category-search";
-import { CategoriesTable } from "src/sections/categories/categories-table";
 import { useRouter } from "next/router";
+import { CouponsSearch } from "src/sections/coupons/coupons-search";
+import { CouponsTable } from "src/sections/coupons/coupons-table";
 
 const now = new Date();
 
 const data = [
   {
-    id: "asdfghjkl",
-    productType: "Type 1",
-    description: "Global Brand",
+    title: "TEST",
+    logo: null,
+    couponCode: "ABCE1234",
+    startTime: new Date(),
+    endTime: new Date(),
+    discountPercentage: 10,
+    minimumAmount: 399,
+    productType: "TYPE 1",
     status: "ACTIVE",
   },
 ];
 
-const useProducts = (page, rowsPerPage) => {
+const useCoupons = (page, rowsPerPage) => {
   return useMemo(() => {
     return applyPagination(data, page, rowsPerPage);
   }, [page, rowsPerPage]);
@@ -36,8 +41,8 @@ const useOrderIds = (category) => {
 const Page = () => {
   const [page, setPage] = useState(0);
   const [rowsPerPage, setRowsPerPage] = useState(5);
-  const categories = useProducts(page, rowsPerPage);
-  const categoryIds = useOrderIds(categories);
+  const coupons = useCoupons(page, rowsPerPage);
+  const categoryIds = useOrderIds(coupons);
   const categorySelection = useSelection(categoryIds);
   const router = useRouter();
 
@@ -52,7 +57,7 @@ const Page = () => {
   return (
     <>
       <Head>
-        <title>Categories | Shofy jewellery</title>
+        <title>Coupons | Shofy jewellery</title>
       </Head>
       <Box
         component="main"
@@ -65,7 +70,7 @@ const Page = () => {
           <Stack spacing={3}>
             <Stack direction="row" justifyContent="space-between" spacing={4}>
               <Stack spacing={1}>
-                <Typography variant="h4">Categories</Typography>
+                <Typography variant="h4">Coupons</Typography>
                 <Stack alignItems="center" direction="row" spacing={1}></Stack>
               </Stack>
               <div>
@@ -82,10 +87,10 @@ const Page = () => {
                 </Button>
               </div>
             </Stack>
-            <CategorySearch />
-            <CategoriesTable
+            <CouponsSearch />
+            <CouponsTable
               count={data.length}
-              items={categories}
+              items={coupons}
               onDeselectAll={categorySelection.handleDeselectAll}
               onDeselectOne={categorySelection.handleDeselectOne}
               onPageChange={handlePageChange}
