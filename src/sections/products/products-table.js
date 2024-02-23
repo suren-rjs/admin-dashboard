@@ -45,21 +45,21 @@ export const ProductsTable = (props) => {
               </TableRow>
             </TableHead>
             <TableBody>
-              {items.map((customer) => {
-                const createdAt = format(customer.createdAt, "dd/MM/yyyy");
+              {items.map((product) => {
+                const createdAt = format(product.createdAt, "dd/MM/yyyy");
                 const formattedCurrency = formatter.format(3000);
 
                 return (
-                  <TableRow hover key={customer.id}>
+                  <TableRow hover key={product.id}>
                     <TableCell>
-                      <Typography variant="subtitle2">{customer.name}</Typography>
+                      <Typography variant="subtitle2">{product.name}</Typography>
                     </TableCell>
                     <TableCell>Some Description here ...</TableCell>
                     <TableCell>{createdAt}</TableCell>
                     <TableCell>{createdAt}</TableCell>
                     <TableCell>{formattedCurrency}</TableCell>
                     <TableCell>
-                      <ProductIconGroup id={customer.id}></ProductIconGroup>
+                      <ProductIconGroup id={product.id}></ProductIconGroup>
                     </TableCell>
                   </TableRow>
                 );

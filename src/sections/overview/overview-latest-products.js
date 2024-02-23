@@ -1,3 +1,4 @@
+/* eslint-disable react/jsx-max-props-per-line */
 import { formatDistanceToNow } from 'date-fns';
 import PropTypes from 'prop-types';
 import ArrowRightIcon from '@heroicons/react/24/solid/ArrowRightIcon';
