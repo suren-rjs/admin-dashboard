@@ -2,10 +2,8 @@
 import Head from "next/head";
 import { Box, Container, Stack, Button, Typography, Unstable_Grid2 as Grid } from "@mui/material";
 import { Layout as DashboardLayout } from "src/layouts/dashboard/layout";
-import { AccountProfile } from "src/sections/account/account-profile";
-import { AccountProfileDetails } from "src/sections/account/account-profile-details";
 import { useRouter } from "next/router";
-import { ProductImage } from "src/sections/product-edit/product-image";
+import { ProductImage } from "src/sections/product-form/product-image";
 import { ProductDetails } from "src/sections/product-edit/product-information";
 
 const Page = ({ product }) => {
