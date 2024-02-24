@@ -3,16 +3,20 @@ import Head from "next/head";
 import { Box, Container, Stack, Button, Typography, Unstable_Grid2 as Grid } from "@mui/material";
 import { Layout as DashboardLayout } from "src/layouts/dashboard/layout";
 import { useRouter } from "next/router";
-import { ProductImage } from "src/sections/product-form/product-image";
-import { ProductDetails } from "src/sections/product-form/product-form";
+import { BrandImage } from "src/sections/brand-form/brand-image";
+import { BrandDetails } from "src/sections/brand-form/brand-form";
 
 const Page = ({ product }) => {
   const router = useRouter();
+
+  let image =
+    "https://www.freepnglogos.com/uploads/google-logo-png/google-logo-png-webinar-optimizing-for-success-google-business-webinar-13.png";
+
   function navigateDashboard() {
     router.push("/");
   }
   function navigateProducts() {
-    router.push("/products");
+    router.push("/brands");
   }
   return (
     <>
@@ -34,21 +38,21 @@ const Page = ({ product }) => {
         <Container maxWidth="lg">
           <Stack spacing={3}>
             <div>
-              <Typography variant="h4">{(product ? "Edit " : "Add ") + "Product"}</Typography>
+              <Typography variant="h4">{(product ? "Edit " : "Add ") + "Brand"}</Typography>
               <hr />
               <Stack direction="row" spacing={1}>
                 <Button onClick={navigateDashboard}>Dashboard</Button>
-                <Button onClick={navigateProducts}>Products</Button>
+                <Button onClick={navigateProducts}>Brands</Button>
                 <Button disabled>{product ? product.id : "add"}</Button>
               </Stack>
             </div>
             <div>
               <Grid container spacing={3}>
                 <Grid xs={12} md={6} lg={4}>
-                  <ProductImage />
+                  <BrandImage image={image} />
                 </Grid>
                 <Grid xs={12} md={6} lg={8}>
-                  <ProductDetails productInformation={product} />
+                  <BrandDetails productInformation={product} />
                 </Grid>
               </Grid>
             </div>

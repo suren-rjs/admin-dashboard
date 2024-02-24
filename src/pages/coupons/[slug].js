@@ -3,8 +3,7 @@ import Head from "next/head";
 import { Box, Container, Stack, Button, Typography, Unstable_Grid2 as Grid } from "@mui/material";
 import { Layout as DashboardLayout } from "src/layouts/dashboard/layout";
 import { useRouter } from "next/router";
-import { ProductImage } from "src/sections/product-form/product-image";
-import { ProductDetails } from "src/sections/product-form/product-form";
+import { CouponDetails } from "src/sections/coupon-form/coupon-form";
 
 const Page = ({ product }) => {
   const router = useRouter();
@@ -12,7 +11,7 @@ const Page = ({ product }) => {
     router.push("/");
   }
   function navigateProducts() {
-    router.push("/products");
+    router.push("/coupons");
   }
   return (
     <>
@@ -34,21 +33,18 @@ const Page = ({ product }) => {
         <Container maxWidth="lg">
           <Stack spacing={3}>
             <div>
-              <Typography variant="h4">{(product ? "Edit " : "Add ") + "Product"}</Typography>
+              <Typography variant="h4">{(product ? "Edit " : "Add ") + "Coupon"}</Typography>
               <hr />
               <Stack direction="row" spacing={1}>
                 <Button onClick={navigateDashboard}>Dashboard</Button>
-                <Button onClick={navigateProducts}>Products</Button>
+                <Button onClick={navigateProducts}>Coupons</Button>
                 <Button disabled>{product ? product.id : "add"}</Button>
               </Stack>
             </div>
             <div>
               <Grid container spacing={3}>
-                <Grid xs={12} md={6} lg={4}>
-                  <ProductImage />
-                </Grid>
-                <Grid xs={12} md={6} lg={8}>
-                  <ProductDetails productInformation={product} />
+                <Grid xs={12} md={10} lg={12}>
+                  <CouponDetails productInformation={product} />
                 </Grid>
               </Grid>
             </div>
