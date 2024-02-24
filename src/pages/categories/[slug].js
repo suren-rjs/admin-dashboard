@@ -12,7 +12,7 @@ const Page = ({ product }) => {
     router.push("/");
   }
   function navigateProducts() {
-    router.push("/products");
+    router.push("/categories");
   }
   return (
     <>
@@ -38,7 +38,7 @@ const Page = ({ product }) => {
               <hr />
               <Stack direction="row" spacing={1}>
                 <Button onClick={navigateDashboard}>Dashboard</Button>
-                <Button onClick={navigateProducts}>Products</Button>
+                <Button onClick={navigateProducts}>Categories</Button>
                 <Button disabled>{product ? product.id : "add"}</Button>
               </Stack>
             </div>
