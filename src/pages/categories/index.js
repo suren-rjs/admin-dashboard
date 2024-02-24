@@ -15,6 +15,8 @@ const now = new Date();
 const data = [
   {
     id: "asdfghjkl",
+    img: "",
+    parent: "",
     productType: "Type 1",
     description: "Global Brand",
     status: "ACTIVE",

@@ -2,7 +2,7 @@
 import { Typography, Card, CardActions, Container } from "@mui/material";
 import { useState } from "react";
 
-export const ProductImage = ({ image }) => {
+export const CategoryImage = ({ image }) => {
   const [selectedImage, setSelectedImage] = useState(null);
 
   const handleImageChange = (e) => {
@@ -13,7 +13,7 @@ export const ProductImage = ({ image }) => {
     <Card>
       <br />
       <div>
-        <Typography variant="h5">Product Image</Typography>
+        <Typography variant="h5">Category Image</Typography>
       </div>
       <CardActions>
         <input
