@@ -11,6 +11,8 @@ import {
   TextField,
   Unstable_Grid2 as Grid,
   InputAdornment,
+  Checkbox,
+  FormControlLabel,
 } from "@mui/material";
 import { DatePicker } from "@mui/x-date-pickers/DatePicker";
 import { TagsInputComponent } from "../common/tag-input";
@@ -30,7 +32,38 @@ const Status = [
   },
 ];
 
+const Categories = [
+  {
+    value: "type-1",
+    label: "TYPE 1",
+  },
+  {
+    value: "type-2",
+    label: "TYPE 2",
+  },
+  {
+    value: "type-3",
+    label: "TYPE 3",
+  },
+];
+
+const Brands = [
+  {
+    value: "brand-1",
+    label: "Brand 1",
+  },
+  {
+    value: "brand-2",
+    label: "Brand 2",
+  },
+  {
+    value: "brand-3",
+    label: "Brand 3",
+  },
+];
+
 export const ProductDetails = ({ productInformation }) => {
+  const [checked, setChecked] = useState(false);
   const [information, setInformation] = useState({
     img: "",
     title: "",
@@ -108,6 +141,9 @@ export const ProductDetails = ({ productInformation }) => {
     setInformation(information);
   };
 
+  const handleCheckBox = (event) => {
+    setChecked(event.target.checked);
+  };
   const handleSubmit = useCallback((event) => {
     event.preventDefault();
   }, []);
@@ -154,7 +190,7 @@ export const ProductDetails = ({ productInformation }) => {
                   SelectProps={{ native: true }}
                   value={information.brand}
                 >
-                  {Status.map((option) => (
+                  {Brands.map((option) => (
                     <option key={option.value} value={option.value}>
                       {option.label}
                     </option>
@@ -173,7 +209,7 @@ export const ProductDetails = ({ productInformation }) => {
                   SelectProps={{ native: true }}
                   value={information.category}
                 >
-                  {Status.map((option) => (
+                  {Categories.map((option) => (
                     <option key={option.value} value={option.value}>
                       {option.label}
                     </option>
@@ -269,6 +305,21 @@ export const ProductDetails = ({ productInformation }) => {
                   onTagsChange={tagsChange}
                   placeholder={"Add a Tag"}
                   max={25}
+                />
+              </Grid>
+
+              <Grid xs={10} md={6}>
+                <FormControlLabel
+                  value={information.featured}
+                  control={
+                    <Checkbox
+                      checked={checked}
+                      onChange={handleCheckBox}
+                      inputProps={{ "aria-label": "controlled" }}
+                    />
+                  }
+                  label="Featured Product"
+                  labelPlacement="end"
                 />
               </Grid>
             </Grid>

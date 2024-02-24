@@ -1,7 +1,8 @@
+/* eslint-disable react/jsx-max-props-per-line */
 import { Typography, Card, CardActions, Divider, Container } from "@mui/material";
 import { useState } from "react";
 
-export const ProductImage = () => {
+export const BrandImage = ({ image }) => {
   const [selectedImage, setSelectedImage] = useState(null);
 
   const handleImageChange = (e) => {
@@ -12,7 +13,7 @@ export const ProductImage = () => {
     <Card>
       <br />
       <div>
-        <Typography variant="h5">Product Image</Typography>
+        <Typography variant="h5">Brand Logo</Typography>
       </div>
       <CardActions>
         <input
@@ -25,7 +26,8 @@ export const ProductImage = () => {
         <label htmlFor="image-upload">
           <Container maxWidth="md" sx={{ boxShadow: 12, p: 8 }}>
             {selectedImage && <img src={selectedImage} alt="updated" width="280" height="250" />}
-            {!selectedImage && (
+            {image && <img src={image} class="img-thumbnail" width="280" height="250" />}
+            {!image && !selectedImage && (
               <img src="/assets/images/select.svg" class="img-thumbnail" width="280" height="250" />
             )}
           </Container>
