@@ -6,14 +6,15 @@ import { Layout as DashboardLayout } from "src/layouts/dashboard/layout";
 import { useRouter } from "next/router";
 import { CategoryImage } from "src/sections/category-form/category-image";
 import { CategoryDetails } from "src/sections/category-form/category-form";
+import { OrderDetails } from "src/sections/orders/order-form";
 
-const Page = ({ product }) => {
+const Page = ({ order }) => {
   const router = useRouter();
   function navigateDashboard() {
     router.push("/");
   }
   function navigateProducts() {
-    router.push("/categories");
+    router.push("/orders");
   }
   return (
     <>
@@ -35,21 +36,17 @@ const Page = ({ product }) => {
         <Container maxWidth="lg">
           <Stack spacing={3}>
             <div>
-              <Typography variant="h4">{(product ? "Edit " : "Add ") + "Category"}</Typography>
+              <Typography variant="h4">{"Order: " + (order?.id ?? "Invalid order")}</Typography>
               <hr />
               <Stack direction="row" spacing={1}>
                 <Button onClick={navigateDashboard}>Dashboard</Button>
-                <Button onClick={navigateProducts}>Categories</Button>
-                <Button disabled>{product ? product.id : "add"}</Button>
+                <Button onClick={navigateProducts}>Orders</Button>
               </Stack>
             </div>
             <div>
               <Grid container spacing={3}>
-                <Grid xs={12} md={6} lg={4}>
-                  <CategoryImage />
-                </Grid>
-                <Grid xs={12} md={6} lg={8}>
-                  <CategoryDetails category={product} />
+                <Grid xs={12} md={6} lg={12}>
+                  <OrderDetails order={order} />
                 </Grid>
               </Grid>
             </div>
@@ -72,5 +69,5 @@ export async function getServerSideProps(window) {
     const res = await fetch(``);
     data = await res.json();
   } catch (error) {}
-  return { props: { product: data } };
+  return { props: { order: data } };
 }
