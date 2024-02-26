@@ -36,6 +36,7 @@
     "react-apexcharts": "1.4.1",
     "react-dom": "18.2.0",
     "react-tagsinput": "^3.20.3",
+    "reactjs-popup": "^2.0.6",
     "rsuite": "^5.53.2",
     "simplebar-react": "^3.2.4",
     "yup": "1.3.2"

@@ -12,12 +12,15 @@ import {
   TablePagination,
   TableRow,
   Typography,
+  Button,
 } from "@mui/material";
 import { Scrollbar } from "src/components/scrollbar";
 import { SeverityPill } from "src/components/severity-pill";
 import { appCOnstants } from "src/utils/constants";
+import { useRouter } from "next/router";
 
 export const OrdersTable = (props) => {
+  const router = useRouter();
   const {
     count = 0,
     items = [],
@@ -28,18 +31,25 @@ export const OrdersTable = (props) => {
     selected = [],
   } = props;
 
+  function navigateToOrder(id) {
+    router.push(`/orders/${id}`);
+  }
+
   return (
     <Card>
       <Scrollbar>
-        <Box sx={{ minWidth: 800 }}>
+        <Box sx={{ minWidth: 1000 }}>
           <Table>
             <TableHead>
               <TableRow>
                 <TableCell>ORDER</TableCell>
                 <TableCell>CUSTOMER</TableCell>
+                <TableCell>ORDER DATE</TableCell>
                 <TableCell>ADDRESS</TableCell>
-                <TableCell>DATE</TableCell>
+                <TableCell>PAYMENT MODE</TableCell>
+                <TableCell>TOTAL</TableCell>
                 <TableCell>STATUS</TableCell>
+                <TableCell>View Order</TableCell>
               </TableRow>
             </TableHead>
             <TableBody>
@@ -54,14 +64,17 @@ export const OrdersTable = (props) => {
                       </Stack>
                     </TableCell>
                     <TableCell>{order.email}</TableCell>
-                    <TableCell>
-                      {order.address.city}, {order.address.state}, {order.address.country}
-                    </TableCell>
                     <TableCell>{createdAt}</TableCell>
+                    <TableCell>{`${order.address}, ${order.city}, ${order.country}`}</TableCell>
+                    <TableCell>{order.paymentMethod}</TableCell>
+                    <TableCell>{`$ ${order.totalAmount}`}</TableCell>
                     <TableCell>
-                      <SeverityPill color={appCOnstants.statusMap["delivered"]}>
-                        {"delivered"}
+                      <SeverityPill color={appCOnstants.statusMap[order.status]}>
+                        {order.status}
                       </SeverityPill>
+                    </TableCell>
+                    <TableCell>
+                      <Button onClick={() => navigateToOrder(order.user)}>view order</Button>
                     </TableCell>
                   </TableRow>
                 );
@@ -84,10 +97,28 @@ export const OrdersTable = (props) => {
 };
 
 OrdersTable.propTypes = {
-  count: PropTypes.number,
-  items: PropTypes.array,
-  onPageChange: PropTypes.func,
-  onRowsPerPageChange: PropTypes.func,
-  page: PropTypes.number,
-  rowsPerPage: PropTypes.number,
+  orders: PropTypes.arrayOf(
+    PropTypes.shape({
+      user: PropTypes.string.isRequired,
+      cart: PropTypes.arrayOf(PropTypes.object),
+      name: PropTypes.string.isRequired,
+      address: PropTypes.string.isRequired,
+      email: PropTypes.string.isRequired,
+      contact: PropTypes.string.isRequired,
+      city: PropTypes.string.isRequired,
+      country: PropTypes.string.isRequired,
+      zipCode: PropTypes.string.isRequired,
+      subTotal: PropTypes.number.isRequired,
+      shippingCost: PropTypes.number.isRequired,
+      discount: PropTypes.number.isRequired,
+      totalAmount: PropTypes.number.isRequired,
+      shippingOption: PropTypes.string,
+      cardInfo: PropTypes.object,
+      paymentIntent: PropTypes.object,
+      paymentMethod: PropTypes.string.isRequired,
+      orderNote: PropTypes.string,
+      invoice: PropTypes.number.isRequired,
+      status: PropTypes.oneOf(["pending", "processing", "delivered", "cancel"]).isRequired,
+    })
+  ).isRequired,
 };
