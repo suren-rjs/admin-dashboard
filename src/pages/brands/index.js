@@ -1,5 +1,5 @@
 /* eslint-disable react/jsx-max-props-per-line */
-import { useCallback, useMemo, useState } from "react";
+import { useCallback, useEffect, useMemo, useState } from "react";
 import Head from "next/head";
 import PlusIcon from "@heroicons/react/24/solid/PlusIcon";
 import { Box, Button, Container, Stack, SvgIcon, Typography } from "@mui/material";
@@ -9,41 +9,31 @@ import { applyPagination } from "src/utils/apply-pagination";
 import { BrandsTable } from "src/sections/brands/brands-table";
 import { BrandsSearch } from "src/sections/brands/brands-search";
 import { useRouter } from "next/router";
+import adminApiService from "src/services/admin-api-service";
 
 const now = new Date();
 
-const data = [
-  {
-    id: "asdfghjkl",
-    logo: "https://www.freepnglogos.com/uploads/google-logo-png/google-logo-png-webinar-optimizing-for-success-google-business-webinar-13.png",
-    name: "Google",
-    location: "USA",
-    description: "Global Brand",
-    email: "info@google.com",
-    website: "www.google.com",
-    status: "ACTIVE",
-  },
-];
-
-const useProducts = (page, rowsPerPage) => {
+const useProducts = (data, page, rowsPerPage) => {
   return useMemo(() => {
     return applyPagination(data, page, rowsPerPage);
-  }, [page, rowsPerPage]);
-};
-
-const useOrderIds = (products) => {
-  return useMemo(() => {
-    return products.map((order) => order.id);
-  }, [products]);
+  }, [data, page, rowsPerPage]);
 };
 
 const Page = () => {
   const [page, setPage] = useState(0);
   const [rowsPerPage, setRowsPerPage] = useState(5);
-  const products = useProducts(page, rowsPerPage);
-  const productsIds = useOrderIds(products);
-  const productsSelection = useSelection(productsIds);
+  const [brands, updateBrands] = useState([]);
+  const brandList = useProducts(brands, page, rowsPerPage);
   const router = useRouter();
+
+  useEffect(() => {
+    initBrands();
+  }, []);
+
+  async function initBrands() {
+    const response = await adminApiService.getBrands();
+    updateBrands(response.status == 200 ? response.data.result : []);
+  }
 
   const handlePageChange = useCallback((event, value) => {
     setPage(value);
@@ -88,17 +78,13 @@ const Page = () => {
             </Stack>
             <BrandsSearch />
             <BrandsTable
-              count={data.length}
-              items={products}
-              onDeselectAll={productsSelection.handleDeselectAll}
-              onDeselectOne={productsSelection.handleDeselectOne}
+              count={brands.length}
+              items={brandList}
               onPageChange={handlePageChange}
               onRowsPerPageChange={handleRowsPerPageChange}
-              onSelectAll={productsSelection.handleSelectAll}
-              onSelectOne={productsSelection.handleSelectOne}
               page={page}
               rowsPerPage={rowsPerPage}
-              selected={productsSelection.selected}
+              refresh={initBrands}
             />
           </Stack>
         </Container>

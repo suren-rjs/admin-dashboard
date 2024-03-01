@@ -1,5 +1,5 @@
 /* eslint-disable react/jsx-max-props-per-line */
-import { useCallback, useState } from "react";
+import { useCallback, useEffect, useState } from "react";
 import {
   Box,
   Button,
@@ -10,10 +10,7 @@ import {
   Divider,
   TextField,
   Unstable_Grid2 as Grid,
-  InputAdornment,
 } from "@mui/material";
-import { DatePicker } from "@mui/x-date-pickers/DatePicker";
-import { TagsInputComponent } from "../common/tag-input";
 
 const Status = [
   {
@@ -26,21 +23,25 @@ const Status = [
   },
 ];
 
-export const BrandDetails = ({ productInformation }) => {
+export const BrandDetails = ({ brandInformation, submitForm }) => {
+  const [init, completeInit] = useState(false);
   const [information, setInformation] = useState({
-    id: "asdfghjkl",
-    logo: "https://www.freepnglogos.com/uploads/google-logo-png/google-logo-png-webinar-optimizing-for-success-google-business-webinar-13.png",
-    name: "Google",
-    location: "USA",
-    description: "Global Brand",
-    email: "info@google.com",
-    website: "www.google.com",
-    status: "ACTIVE",
+    id: null,
+    logo: null,
+    name: null,
+    location: null,
+    description: null,
+    email: null,
+    website: null,
+    status: null,
   });
 
-  if (productInformation != null) {
-    setInformation(productInformation);
-  }
+  useEffect(() => {
+    if (brandInformation != null && !init) {
+      completeInit(true);
+      setInformation(brandInformation);
+    }
+  }, [brandInformation, information, init]);
 
   const handleChange = useCallback((event) => {
     const { name, value } = event.target;
@@ -50,9 +51,11 @@ export const BrandDetails = ({ productInformation }) => {
     }));
   }, []);
 
-  const handleSubmit = useCallback((event) => {
-    event.preventDefault();
-  }, []);
+  function handleSubmit() {
+    setTimeout(() => {
+      submitForm(information);
+    }, 500);
+  }
 
   return (
     <form autoComplete="off" noValidate onSubmit={handleSubmit}>
@@ -140,7 +143,9 @@ export const BrandDetails = ({ productInformation }) => {
         </CardContent>
         <Divider />
         <CardActions sx={{ justifyContent: "flex-end" }}>
-          <Button variant="contained">Save details</Button>
+          <Button variant="contained" onClick={handleSubmit}>
+            Save details
+          </Button>
         </CardActions>
       </Card>
     </form>

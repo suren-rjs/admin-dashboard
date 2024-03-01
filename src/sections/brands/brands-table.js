@@ -24,6 +24,7 @@ export const BrandsTable = (props) => {
     onRowsPerPageChange,
     page = 0,
     rowsPerPage = 0,
+    refresh = () => {},
   } = props;
 
   return (
@@ -88,7 +89,7 @@ export const BrandsTable = (props) => {
                     </TableCell>
                     <TableCell>{brand.status}</TableCell>
                     <TableCell>
-                      <BrandsIconGroup id={brand.id}></BrandsIconGroup>
+                      <BrandsIconGroup id={brand._id} refresh={refresh}></BrandsIconGroup>
                     </TableCell>
                   </TableRow>
                 );
@@ -104,7 +105,7 @@ export const BrandsTable = (props) => {
         onRowsPerPageChange={onRowsPerPageChange}
         page={page}
         rowsPerPage={rowsPerPage}
-        rowsPerPageOptions={[5, 10, 25]}
+        rowsPerPageOptions={[rowsPerPage]}
       />
     </Card>
   );

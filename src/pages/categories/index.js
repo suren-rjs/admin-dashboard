@@ -1,5 +1,5 @@
 /* eslint-disable react/jsx-max-props-per-line */
-import { useCallback, useMemo, useState } from "react";
+import { useCallback, useEffect, useMemo, useState } from "react";
 import Head from "next/head";
 import PlusIcon from "@heroicons/react/24/solid/PlusIcon";
 import { Box, Button, Container, Stack, SvgIcon, Typography } from "@mui/material";
@@ -9,39 +9,31 @@ import { applyPagination } from "src/utils/apply-pagination";
 import { CategorySearch } from "src/sections/categories/category-search";
 import { CategoriesTable } from "src/sections/categories/categories-table";
 import { useRouter } from "next/router";
+import adminApiService from "src/services/admin-api-service";
 
 const now = new Date();
 
-const data = [
-  {
-    id: "asdfghjkl",
-    img: "",
-    parent: "",
-    productType: "Type 1",
-    description: "Global Brand",
-    status: "ACTIVE",
-  },
-];
-
-const useProducts = (page, rowsPerPage) => {
+const useProducts = (data, page, rowsPerPage) => {
   return useMemo(() => {
     return applyPagination(data, page, rowsPerPage);
-  }, [page, rowsPerPage]);
-};
-
-const useOrderIds = (category) => {
-  return useMemo(() => {
-    return category.map((current) => current.id);
-  }, [category]);
+  }, [data, page, rowsPerPage]);
 };
 
 const Page = () => {
   const [page, setPage] = useState(0);
   const [rowsPerPage, setRowsPerPage] = useState(5);
-  const categories = useProducts(page, rowsPerPage);
-  const categoryIds = useOrderIds(categories);
-  const categorySelection = useSelection(categoryIds);
+  const [categories, updateCategories] = useState([]);
+  const categoryList = useProducts(categories, page, rowsPerPage);
   const router = useRouter();
+
+  useEffect(() => {
+    initCategories();
+  }, []);
+
+  async function initCategories() {
+    const response = await adminApiService.getBrands();
+    updateCategories(response.status == 200 ? response.data.data : []);
+  }
 
   const handlePageChange = useCallback((event, value) => {
     setPage(value);
@@ -86,17 +78,12 @@ const Page = () => {
             </Stack>
             <CategorySearch />
             <CategoriesTable
-              count={data.length}
-              items={categories}
-              onDeselectAll={categorySelection.handleDeselectAll}
-              onDeselectOne={categorySelection.handleDeselectOne}
+              count={categories.length}
+              items={categoryList}
               onPageChange={handlePageChange}
               onRowsPerPageChange={handleRowsPerPageChange}
-              onSelectAll={categorySelection.handleSelectAll}
-              onSelectOne={categorySelection.handleSelectOne}
               page={page}
               rowsPerPage={rowsPerPage}
-              selected={categorySelection.selected}
             />
           </Stack>
         </Container>
