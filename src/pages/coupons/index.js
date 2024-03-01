@@ -1,51 +1,38 @@
 /* eslint-disable react/jsx-max-props-per-line */
-import { useCallback, useMemo, useState } from "react";
+import { useCallback, useEffect, useMemo, useState } from "react";
 import Head from "next/head";
 import PlusIcon from "@heroicons/react/24/solid/PlusIcon";
 import { Box, Button, Container, Stack, SvgIcon, Typography } from "@mui/material";
-import { useSelection } from "src/hooks/use-selection";
 import { Layout as DashboardLayout } from "src/layouts/dashboard/layout";
 import { applyPagination } from "src/utils/apply-pagination";
 import { useRouter } from "next/router";
 import { CouponsSearch } from "src/sections/coupons/coupons-search";
 import { CouponsTable } from "src/sections/coupons/coupons-table";
+import adminApiService from "src/services/admin-api-service";
 
 const now = new Date();
 
-const data = [
-  {
-    id: "asdfghjkl",
-    title: "TEST",
-    logo: null,
-    couponCode: "ABCE1234",
-    startTime: new Date(),
-    endTime: new Date(),
-    discountPercentage: 10,
-    minimumAmount: 399,
-    productType: "TYPE 1",
-    status: "ACTIVE",
-  },
-];
-
-const useCoupons = (page, rowsPerPage) => {
+const useCoupons = (data, page, rowsPerPage) => {
   return useMemo(() => {
     return applyPagination(data, page, rowsPerPage);
-  }, [page, rowsPerPage]);
-};
-
-const useOrderIds = (category) => {
-  return useMemo(() => {
-    return category.map((current) => current.id);
-  }, [category]);
+  }, [data, page, rowsPerPage]);
 };
 
 const Page = () => {
   const [page, setPage] = useState(0);
   const [rowsPerPage, setRowsPerPage] = useState(5);
-  const coupons = useCoupons(page, rowsPerPage);
-  const categoryIds = useOrderIds(coupons);
-  const categorySelection = useSelection(categoryIds);
+  const [coupons, updateCoupons] = useState([]);
+  const couponList = useCoupons(coupons, page, rowsPerPage);
   const router = useRouter();
+
+  useEffect(() => {
+    initCoupons();
+  }, []);
+
+  async function initCoupons() {
+    const response = await adminApiService.getCoupons();
+    updateCoupons(response.status == 200 ? response.data : []);
+  }
 
   const handlePageChange = useCallback((event, value) => {
     setPage(value);
@@ -90,17 +77,12 @@ const Page = () => {
             </Stack>
             <CouponsSearch />
             <CouponsTable
-              count={data.length}
-              items={coupons}
-              onDeselectAll={categorySelection.handleDeselectAll}
-              onDeselectOne={categorySelection.handleDeselectOne}
+              count={coupons.length}
+              items={couponList}
               onPageChange={handlePageChange}
               onRowsPerPageChange={handleRowsPerPageChange}
-              onSelectAll={categorySelection.handleSelectAll}
-              onSelectOne={categorySelection.handleSelectOne}
               page={page}
               rowsPerPage={rowsPerPage}
-              selected={categorySelection.selected}
             />
           </Stack>
         </Container>

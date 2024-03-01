@@ -27,6 +27,7 @@
     "@rsuite/icons": "^1.0.3",
     "@wojtekmaj/react-daterange-picker": "^5.5.0",
     "apexcharts": "3.44.2",
+    "axios": "^1.6.7",
     "date-fns": "2.30.0",
     "formik": "2.4.5",
     "next": "14.0.4",
