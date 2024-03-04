@@ -69,7 +69,7 @@ const Page = () => {
                     </SvgIcon>
                   }
                   variant="contained"
-                  onClick={() => router.push("/categories/add")}
+                  onClick={() => router.push("/coupons/add")}
                 >
                   Add
                 </Button>
@@ -83,6 +83,7 @@ const Page = () => {
               onRowsPerPageChange={handleRowsPerPageChange}
               page={page}
               rowsPerPage={rowsPerPage}
+              refresh={initCoupons}
             />
           </Stack>
         </Container>

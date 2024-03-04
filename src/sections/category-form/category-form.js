@@ -1,5 +1,5 @@
 /* eslint-disable react/jsx-max-props-per-line */
-import { useCallback, useState } from "react";
+import { useCallback, useEffect, useState } from "react";
 import {
   Box,
   Button,
@@ -19,11 +19,11 @@ import { TagsInputComponent } from "../common/tag-input";
 
 const Status = [
   {
-    value: "active",
+    value: "Show",
     label: "ACTIVE",
   },
   {
-    value: "in-active",
+    value: "Hide",
     label: "IN ACTIVE",
   },
 ];
@@ -43,20 +43,23 @@ const Categories = [
   },
 ];
 
-export const CategoryDetails = ({ category }) => {
-  const [checked, setChecked] = useState(false);
+export const CategoryDetails = ({ category, submitForm }) => {
+  const [init, completeInit] = useState(false);
   const [information, setInformation] = useState({
-    id: "",
-    img: "",
-    parent: "",
-    productType: "",
-    description: "",
-    status: "",
+    id: null,
+    img: null,
+    parent: "jwellery/",
+    productType: null,
+    description: null,
+    status: "Show",
   });
 
-  if (category != null) {
-    setInformation(category);
-  }
+  useEffect(() => {
+    if (category != null && !init) {
+      completeInit(true);
+      setInformation(category);
+    }
+  }, [category, information, init]);
 
   const handleChange = useCallback((event) => {
     const { name, value } = event.target;
@@ -66,10 +69,11 @@ export const CategoryDetails = ({ category }) => {
     }));
   }, []);
 
-  const handleSubmit = useCallback((event) => {
-    event.preventDefault();
-  }, []);
-
+  function handleSubmit() {
+    setTimeout(() => {
+      submitForm(information);
+    }, 500);
+  }
   return (
     <form autoComplete="off" noValidate onSubmit={handleSubmit}>
       <Card>
@@ -141,7 +145,9 @@ export const CategoryDetails = ({ category }) => {
         </CardContent>
         <Divider />
         <CardActions sx={{ justifyContent: "flex-end" }}>
-          <Button variant="contained">Save details</Button>
+          <Button variant="contained" onClick={handleSubmit}>
+            Save details
+          </Button>
         </CardActions>
       </Card>
     </form>

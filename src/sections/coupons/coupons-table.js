@@ -1,6 +1,6 @@
 /* eslint-disable react/jsx-max-props-per-line */
 import PropTypes from "prop-types";
-import { format } from "date-fns";
+import { format, parseISO } from "date-fns";
 import {
   Box,
   Card,
@@ -25,6 +25,7 @@ export const CouponsTable = (props) => {
     onRowsPerPageChange,
     page = 0,
     rowsPerPage = 0,
+    refresh = () => {},
   } = props;
 
   return (
@@ -45,24 +46,24 @@ export const CouponsTable = (props) => {
               </TableRow>
             </TableHead>
             <TableBody>
-              {items.map((category) => {
-                const fromDate = format(category.startTime, "dd/MM/yyyy");
-                const toDate = format(category.endTime, "dd/MM/yyyy");
+              {items.map((coupon) => {
+                const fromDate = format(parseISO(coupon.startTime), "dd/MM/yyyy");
+                const toDate = format(parseISO(coupon.endTime), "dd/MM/yyyy");
                 return (
-                  <TableRow hover key={category.id}>
+                  <TableRow hover key={coupon.id}>
                     <TableCell>
                       <Stack alignItems="center" direction="row" spacing={2}>
-                        <Typography variant="subtitle2">{category.title}</Typography>
+                        <Typography variant="subtitle2">{coupon.title}</Typography>
                       </Stack>
                     </TableCell>
-                    <TableCell>{category.couponCode}</TableCell>
-                    <TableCell>{category.discountPercentage}</TableCell>
-                    <TableCell>{category.minimumAmount}</TableCell>
-                    <TableCell>{category.productType}</TableCell>
+                    <TableCell>{coupon.couponCode}</TableCell>
+                    <TableCell>{coupon.discountPercentage}</TableCell>
+                    <TableCell>{coupon.minimumAmount}</TableCell>
+                    <TableCell>{coupon.productType}</TableCell>
                     <TableCell>{fromDate + " to " + toDate}</TableCell>
-                    <TableCell>{category.status}</TableCell>
+                    <TableCell>{coupon.status}</TableCell>
                     <TableCell>
-                      <CouponsIconGroup id={category.id}></CouponsIconGroup>
+                      <CouponsIconGroup id={coupon._id} refresh={refresh}></CouponsIconGroup>
                     </TableCell>
                   </TableRow>
                 );
