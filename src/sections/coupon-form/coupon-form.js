@@ -1,5 +1,7 @@
 /* eslint-disable react/jsx-max-props-per-line */
-import { useCallback, useState } from "react";
+import { useCallback, useEffect, useState } from "react";
+import { format, parseISO } from "date-fns";
+import { enIN } from "date-fns/locale";
 import {
   Box,
   Button,
@@ -13,7 +15,7 @@ import {
   InputAdornment,
 } from "@mui/material";
 import { DatePicker } from "@mui/x-date-pickers/DatePicker";
-import { TagsInputComponent } from "../common/tag-input";
+import adminApiService from "src/services/admin-api-service";
 
 const Status = [
   {
@@ -26,41 +28,44 @@ const Status = [
   },
 ];
 
-const Categories = [
-  {
-    value: "type-1",
-    label: "TYPE 1",
-  },
-  {
-    value: "type-2",
-    label: "TYPE 2",
-  },
-  {
-    value: "type-3",
-    label: "TYPE 3",
-  },
-];
-
-export const CouponDetails = ({ coupon }) => {
+export const CouponDetails = ({ coupon, submitForm }) => {
+  const [init, completeInit] = useState(false);
+  const [categories, setCategories] = useState([]);
   const [information, setInformation] = useState({
-    id: "",
-    title: "",
-    logo: null,
-    couponCode: "",
+    id: null,
+    title: null,
+    logo: "",
+    couponCode: null,
     startTime: null,
     endTime: null,
     discountPercentage: null,
     minimumAmount: null,
-    productType: null,
-    status: "ACTIVE",
+    productType: "type 1",
+    status: "active",
   });
 
-  if (coupon != null) {
-    setInformation(coupon);
+  useEffect(() => {
+    if (!init) {
+      fetchCategories();
+      completeInit(true);
+      if (coupon) {
+        const startTime = parseISO(coupon.startTime);
+        coupon.startTime = new Date(startTime);
+        const endTime = parseISO(coupon.endTime);
+        coupon.endTime = new Date(endTime);
+        setInformation(coupon);
+      }
+    }
+  }, [coupon, information, init]);
+
+  async function fetchCategories() {
+    let response = await adminApiService.getCategories();
+    setCategories(response.status == 200 ? response.data.result : []);
   }
 
   const handleChange = useCallback((event) => {
     const { name, value } = event.target;
+    console.log(name, value);
     setInformation((prevState) => ({
       ...prevState,
       [name]: value,
@@ -83,15 +88,17 @@ export const CouponDetails = ({ coupon }) => {
   };
 
   const setEndDate = (date) => {
-    if (date > information.offerDate.startDate) {
+    if (date > information?.startTime) {
       information.endTime = date;
       setInformation(information);
     }
   };
 
-  const handleSubmit = useCallback((event) => {
-    event.preventDefault();
-  }, []);
+  function handleSubmit() {
+    setTimeout(() => {
+      submitForm(information);
+    }, 500);
+  }
 
   return (
     <form autoComplete="off" noValidate onSubmit={handleSubmit}>
@@ -136,9 +143,9 @@ export const CouponDetails = ({ coupon }) => {
                   SelectProps={{ native: true }}
                   value={information.productType}
                 >
-                  {Categories.map((option) => (
-                    <option key={option.value} value={option.value}>
-                      {option.label}
+                  {categories.map((option) => (
+                    <option key={option.productType} value={option.productType}>
+                      {option.productType}
                     </option>
                   ))}
                 </TextField>
@@ -168,7 +175,7 @@ export const CouponDetails = ({ coupon }) => {
                   fullWidth
                   label="Discount (%)"
                   name="discountPercentage"
-                  onChange={handleChange}
+                  onChange={handleDiscount}
                   required
                   value={information.discountPercentage}
                 />
@@ -178,8 +185,8 @@ export const CouponDetails = ({ coupon }) => {
                 <TextField
                   fullWidth
                   label="Minimum Amount"
-                  name="discountPercentage"
-                  onChange={handleDiscount}
+                  name="minimumAmount"
+                  onChange={handleChange}
                   required
                   value={information.minimumAmount}
                   InputProps={{
@@ -212,7 +219,9 @@ export const CouponDetails = ({ coupon }) => {
         </CardContent>
         <Divider />
         <CardActions sx={{ justifyContent: "flex-end" }}>
-          <Button variant="contained">Save Coupon</Button>
+          <Button variant="contained" onClick={handleSubmit}>
+            Save Coupon
+          </Button>
         </CardActions>
       </Card>
     </form>

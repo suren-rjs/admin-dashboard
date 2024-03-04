@@ -8,14 +8,16 @@ import "rsuite/dist/rsuite.min.css";
 import { CallBackIconButton } from "../common/callback-icon-button";
 import { Stack } from "@mui/material";
 import { useRouter } from "next/router";
+import adminApiService from "src/services/admin-api-service";
 
-export const CouponsIconGroup = ({ id }) => {
+export const CouponsIconGroup = ({ id, refresh }) => {
   const router = useRouter();
   function editProduct() {
     router.push(`/coupons/${id}`);
   }
-  function deleteProduct() {
-    router.push(`/coupons`);
+  async function deleteCoupon() {
+    await adminApiService.deleteCouponById(id);
+    refresh();
   }
   return (
     <div className="App" style={{ textAlign: "center" }}>
@@ -32,7 +34,7 @@ export const CouponsIconGroup = ({ id }) => {
         ></CallBackIconButton>
         <CallBackIconButton
           Icon={<TrashIcon />}
-          callback={deleteProduct}
+          callback={deleteCoupon}
           color={"red"}
         ></CallBackIconButton>
       </Stack>

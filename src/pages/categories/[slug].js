@@ -6,14 +6,59 @@ import { Layout as DashboardLayout } from "src/layouts/dashboard/layout";
 import { useRouter } from "next/router";
 import { CategoryImage } from "src/sections/category-form/category-image";
 import { CategoryDetails } from "src/sections/category-form/category-form";
+import adminApiService from "src/services/admin-api-service";
+import { useEffect, useState } from "react";
 
-const Page = ({ product }) => {
+const Page = ({ category }) => {
   const router = useRouter();
+  const [file, selectFile] = useState(null);
+  const [image, setImage] = useState(null);
+
+  let uploadClick = false;
+
+  function uploadBreak() {
+    setTimeout(() => {
+      selectFile(null);
+    }, 3000);
+  }
+
+  useEffect(() => {
+    setImage(category?.img);
+  }, [category]);
+
   function navigateDashboard() {
     router.push("/");
   }
   function navigateProducts() {
     router.push("/categories");
+  }
+
+  async function submitForm(updatedFormData) {
+    if (!uploadClick) {
+      uploadClick = true;
+      let imageSelected = true;
+      if (file == null) imageSelected = false;
+      try {
+        if (imageSelected) {
+          uploadBreak();
+          let response = await adminApiService.uploadImage(file);
+          console.log(response.data.url);
+          updatedFormData.img = response.data.url;
+        }
+        if (updatedFormData.isEdit) {
+          adminApiService.editCategory(updatedFormData);
+        } else {
+          adminApiService.addCategory(updatedFormData);
+        }
+        uploadClick = false;
+        setTimeout(() => {
+          navigateProducts();
+        }, 1000);
+      } catch (e) {
+        console.log("Error : " + e);
+      }
+      uploadClick = false;
+    }
   }
   return (
     <>
@@ -35,21 +80,21 @@ const Page = ({ product }) => {
         <Container maxWidth="lg">
           <Stack spacing={3}>
             <div>
-              <Typography variant="h4">{(product ? "Edit " : "Add ") + "Category"}</Typography>
+              <Typography variant="h4">{(category ? "Edit " : "Add ") + "Category"}</Typography>
               <hr />
               <Stack direction="row" spacing={1}>
                 <Button onClick={navigateDashboard}>Dashboard</Button>
                 <Button onClick={navigateProducts}>Categories</Button>
-                <Button disabled>{product ? product.id : "add"}</Button>
+                <Button disabled>{category ? category.id : "add"}</Button>
               </Stack>
             </div>
             <div>
               <Grid container spacing={3}>
                 <Grid xs={12} md={6} lg={4}>
-                  <CategoryImage />
+                  <CategoryImage image={image} onSelect={selectFile} />
                 </Grid>
                 <Grid xs={12} md={6} lg={8}>
-                  <CategoryDetails category={product} />
+                  <CategoryDetails category={category} submitForm={submitForm} />
                 </Grid>
               </Grid>
             </div>
@@ -69,8 +114,10 @@ export async function getServerSideProps(window) {
   console.log(window.query.slug);
   let data = null;
   try {
-    const res = await fetch(``);
-    data = await res.json();
+    if (window.query.slug == "add") throw "Not Found";
+    const res = await adminApiService.getCategoryById(window.query.slug);
+    data = res.data;
+    data.isEdit = true;
   } catch (error) {}
-  return { props: { product: data } };
+  return { props: { category: data } };
 }

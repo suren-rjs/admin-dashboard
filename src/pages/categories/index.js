@@ -3,7 +3,6 @@ import { useCallback, useEffect, useMemo, useState } from "react";
 import Head from "next/head";
 import PlusIcon from "@heroicons/react/24/solid/PlusIcon";
 import { Box, Button, Container, Stack, SvgIcon, Typography } from "@mui/material";
-import { useSelection } from "src/hooks/use-selection";
 import { Layout as DashboardLayout } from "src/layouts/dashboard/layout";
 import { applyPagination } from "src/utils/apply-pagination";
 import { CategorySearch } from "src/sections/categories/category-search";
@@ -31,8 +30,8 @@ const Page = () => {
   }, []);
 
   async function initCategories() {
-    const response = await adminApiService.getBrands();
-    updateCategories(response.status == 200 ? response.data.data : []);
+    const response = await adminApiService.getCategories();
+    updateCategories(response.status == 200 ? response.data.result : []);
   }
 
   const handlePageChange = useCallback((event, value) => {
@@ -84,6 +83,7 @@ const Page = () => {
               onRowsPerPageChange={handleRowsPerPageChange}
               page={page}
               rowsPerPage={rowsPerPage}
+              refresh={initCategories}
             />
           </Stack>
         </Container>

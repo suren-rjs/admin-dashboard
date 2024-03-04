@@ -24,6 +24,7 @@ export const CategoriesTable = (props) => {
     onRowsPerPageChange,
     page = 0,
     rowsPerPage = 0,
+    refresh = () => {},
   } = props;
 
   return (
@@ -46,10 +47,10 @@ export const CategoriesTable = (props) => {
                     <TableCell>
                       <Stack alignItems="center" direction="row" spacing={2}>
                         <ListItemAvatar>
-                          {category.logo ? (
+                          {category.img ? (
                             <Box
                               component="img"
-                              src={category.logo}
+                              src={category.img}
                               sx={{
                                 borderRadius: 1,
                                 height: 48,
@@ -73,7 +74,7 @@ export const CategoriesTable = (props) => {
                     <TableCell>{category.description}</TableCell>
                     <TableCell>{category.status}</TableCell>
                     <TableCell>
-                      <CategiesIconGroup id={category.id}></CategiesIconGroup>
+                      <CategiesIconGroup id={category._id} refresh={refresh}></CategiesIconGroup>
                     </TableCell>
                   </TableRow>
                 );

@@ -67,6 +67,38 @@ class AdminApiService {
     }
   }
 
+  async addCoupon(brand: any): Promise<AxiosResponse> {
+    try {
+      return await axios.post(`${baseUrl}/coupon/add`, brand);
+    } catch (error) {
+      throw error.response?.data;
+    }
+  }
+
+  async editCoupon(brand: any): Promise<AxiosResponse> {
+    try {
+      return await axios.patch(`${baseUrl}/coupon/` + brand._id, brand);
+    } catch (error) {
+      throw error.response?.data;
+    }
+  }
+
+  async getCouponById(id: string): Promise<AxiosResponse> {
+    try {
+      return await axios.get(`${baseUrl}/coupon/` + id);
+    } catch (error) {
+      throw error.response?.data;
+    }
+  }
+
+  async deleteCouponById(id: string): Promise<AxiosResponse> {
+    try {
+      return await axios.delete(`${baseUrl}/coupon/` + id);
+    } catch (error) {
+      throw error.response?.data;
+    }
+  }
+
   async getBrands(): Promise<AxiosResponse> {
     try {
       return await axios.get(`${baseUrl}/brand/all`);
@@ -110,6 +142,38 @@ class AdminApiService {
   async getCategories(): Promise<AxiosResponse> {
     try {
       return await axios.get(`${baseUrl}/category/all`);
+    } catch (error) {
+      throw error.response?.data;
+    }
+  }
+
+  async addCategory(category: any): Promise<AxiosResponse> {
+    try {
+      return await axios.post(`${baseUrl}/category/add`, category);
+    } catch (error) {
+      throw error.response?.data;
+    }
+  }
+
+  async editCategory(category: any): Promise<AxiosResponse> {
+    try {
+      return await axios.patch(`${baseUrl}/category/edit/` + category._id, category);
+    } catch (error) {
+      throw error.response?.data;
+    }
+  }
+
+  async getCategoryById(id: string): Promise<AxiosResponse> {
+    try {
+      return await axios.get(`${baseUrl}/category/get/` + id);
+    } catch (error) {
+      throw error.response?.data;
+    }
+  }
+
+  async deleteCategoryById(id: string): Promise<AxiosResponse> {
+    try {
+      return await axios.delete(`${baseUrl}/category/delete/` + id);
     } catch (error) {
       throw error.response?.data;
     }

@@ -2,11 +2,12 @@
 import { Typography, Card, CardActions, Container } from "@mui/material";
 import { useState } from "react";
 
-export const CategoryImage = ({ image }) => {
+export const CategoryImage = ({ image, onSelect }) => {
   const [selectedImage, setSelectedImage] = useState(null);
 
   const handleImageChange = (e) => {
     const file = e.target.files[0];
+    onSelect(file);
     setSelectedImage(URL.createObjectURL(file));
   };
   return (
