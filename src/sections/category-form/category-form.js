@@ -10,12 +10,7 @@ import {
   Divider,
   TextField,
   Unstable_Grid2 as Grid,
-  InputAdornment,
-  Checkbox,
-  FormControlLabel,
 } from "@mui/material";
-import { DatePicker } from "@mui/x-date-pickers/DatePicker";
-import { TagsInputComponent } from "../common/tag-input";
 
 const Status = [
   {
@@ -25,21 +20,6 @@ const Status = [
   {
     value: "Hide",
     label: "HIDE",
-  },
-];
-
-const Categories = [
-  {
-    value: "type-1",
-    label: "TYPE 1",
-  },
-  {
-    value: "type-2",
-    label: "TYPE 2",
-  },
-  {
-    value: "type-3",
-    label: "TYPE 3",
   },
 ];
 
@@ -108,7 +88,6 @@ export const CategoryDetails = ({ category, submitForm }) => {
                   fullWidth
                   label="Parent"
                   name="parent"
-                  multiline
                   onChange={handleChange}
                   value={information.parent}
                   required

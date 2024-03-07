@@ -12,7 +12,6 @@ import {
   TableRow,
   Typography,
   Stack,
-  ListItemAvatar,
 } from "@mui/material";
 import { Scrollbar } from "src/components/scrollbar";
 import { CouponsIconGroup } from "./coupons-icon-group";

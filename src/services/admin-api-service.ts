@@ -59,6 +59,30 @@ class AdminApiService {
     }
   }
 
+  async editProduct(product: any): Promise<AxiosResponse> {
+    try {
+      return await axios.patch(`${baseUrl}/product/edit-product/${product._id}`, product);
+    } catch (error) {
+      throw error.response?.data;
+    }
+  }
+
+  async deleteProductById(id: string): Promise<AxiosResponse> {
+    try {
+      return await axios.get(`${baseUrl}/product/` + id);
+    } catch (error) {
+      throw error.response?.data;
+    }
+  }
+
+  async getProductById(id: string): Promise<AxiosResponse> {
+    try {
+      return await axios.get(`${baseUrl}/product/single-product/` + id);
+    } catch (error) {
+      throw error.response?.data;
+    }
+  }
+
   async getCoupons(): Promise<AxiosResponse> {
     try {
       return await axios.get(`${baseUrl}/coupon/`);
