@@ -20,11 +20,11 @@ import { TagsInputComponent } from "../common/tag-input";
 const Status = [
   {
     value: "Show",
-    label: "ACTIVE",
+    label: "SHOW",
   },
   {
     value: "Hide",
-    label: "IN ACTIVE",
+    label: "HIDE",
   },
 ];
 
@@ -48,7 +48,7 @@ export const CategoryDetails = ({ category, submitForm }) => {
   const [information, setInformation] = useState({
     id: null,
     img: null,
-    parent: "jwellery/",
+    parent: "/",
     productType: null,
     description: null,
     status: "Show",
@@ -106,20 +106,13 @@ export const CategoryDetails = ({ category, submitForm }) => {
               <Grid xs={12} md={6}>
                 <TextField
                   fullWidth
-                  label="Select Parent"
+                  label="Parent"
                   name="parent"
+                  multiline
                   onChange={handleChange}
+                  value={information.parent}
                   required
-                  select
-                  SelectProps={{ native: true }}
-                  value={information.category}
-                >
-                  {Categories.map((option) => (
-                    <option key={option.value} value={option.value}>
-                      {option.label}
-                    </option>
-                  ))}
-                </TextField>
+                />
               </Grid>
               <Grid xs={12} md={5}>
                 <TextField
