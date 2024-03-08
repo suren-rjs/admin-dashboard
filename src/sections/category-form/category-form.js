@@ -10,36 +10,16 @@ import {
   Divider,
   TextField,
   Unstable_Grid2 as Grid,
-  InputAdornment,
-  Checkbox,
-  FormControlLabel,
 } from "@mui/material";
-import { DatePicker } from "@mui/x-date-pickers/DatePicker";
-import { TagsInputComponent } from "../common/tag-input";
 
 const Status = [
   {
     value: "Show",
-    label: "ACTIVE",
+    label: "SHOW",
   },
   {
     value: "Hide",
-    label: "IN ACTIVE",
-  },
-];
-
-const Categories = [
-  {
-    value: "type-1",
-    label: "TYPE 1",
-  },
-  {
-    value: "type-2",
-    label: "TYPE 2",
-  },
-  {
-    value: "type-3",
-    label: "TYPE 3",
+    label: "HIDE",
   },
 ];
 
@@ -48,7 +28,7 @@ export const CategoryDetails = ({ category, submitForm }) => {
   const [information, setInformation] = useState({
     id: null,
     img: null,
-    parent: "jwellery/",
+    parent: "/",
     productType: null,
     description: null,
     status: "Show",
@@ -106,20 +86,12 @@ export const CategoryDetails = ({ category, submitForm }) => {
               <Grid xs={12} md={6}>
                 <TextField
                   fullWidth
-                  label="Select Parent"
+                  label="Parent"
                   name="parent"
                   onChange={handleChange}
+                  value={information.parent}
                   required
-                  select
-                  SelectProps={{ native: true }}
-                  value={information.category}
-                >
-                  {Categories.map((option) => (
-                    <option key={option.value} value={option.value}>
-                      {option.label}
-                    </option>
-                  ))}
-                </TextField>
+                />
               </Grid>
               <Grid xs={12} md={5}>
                 <TextField

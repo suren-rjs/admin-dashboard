@@ -1,5 +1,6 @@
+/* eslint-disable react-hooks/exhaustive-deps */
 /* eslint-disable react/jsx-max-props-per-line */
-import { useCallback, useState } from "react";
+import { useCallback, useState, useEffect } from "react";
 import {
   Box,
   Button,
@@ -16,6 +17,7 @@ import {
 } from "@mui/material";
 import { DatePicker } from "@mui/x-date-pickers/DatePicker";
 import { TagsInputComponent } from "../common/tag-input";
+import adminApiService from "src/services/admin-api-service";
 
 const Status = [
   {
@@ -32,67 +34,66 @@ const Status = [
   },
 ];
 
-const Categories = [
-  {
-    value: "type-1",
-    label: "TYPE 1",
-  },
-  {
-    value: "type-2",
-    label: "TYPE 2",
-  },
-  {
-    value: "type-3",
-    label: "TYPE 3",
-  },
-];
-
-const Brands = [
-  {
-    value: "brand-1",
-    label: "Brand 1",
-  },
-  {
-    value: "brand-2",
-    label: "Brand 2",
-  },
-  {
-    value: "brand-3",
-    label: "Brand 3",
-  },
-];
-
-export const ProductDetails = ({ productInformation }) => {
-  const [checked, setChecked] = useState(false);
+export const ProductDetails = ({ product, submitForm }) => {
+  const [init, completeInit] = useState(false);
+  const [checked, setChecked] = useState(true);
+  const [categories, setCategories] = useState([]);
+  const [brands, setBrands] = useState([]);
+  const [sizes, setSizes] = useState([]);
+  const [tags, setTags] = useState([]);
+  const [brand, setBrand] = useState(null);
   const [information, setInformation] = useState({
-    img: "",
-    title: "",
-    slug: "",
+    img: null,
+    title: null,
+    slug: null,
     unit: 0,
     imageURLs: [],
-    parent: "",
-    children: "",
+    parent: "/",
+    children: "/",
     price: 0,
     discount: 0,
     quantity: 0,
     brand: {},
     category: {},
     status: "in-stock",
-    productType: "",
-    description: "",
-    videoId: "",
+    productType: null,
+    description: null,
+    videoId: null,
     tags: [],
     sizes: [],
     offerDate: {
       startDate: null,
       endDate: null,
     },
-    featured: false,
+    featured: checked,
     sellCount: 0,
   });
 
-  if (productInformation != null) {
-    setInformation(productInformation);
+  useEffect(() => {
+    if (!init) {
+      fetchCategories();
+      fetchBrands();
+      completeInit(true);
+      if (product) {
+        (product.offerDate = {
+          startDate: null,
+          endDate: null,
+        }),
+          setSizes(product?.sizes ?? []);
+        setTags(product?.tags ?? []);
+        setBrand(product?.brand ?? null);
+        setInformation(product);
+      }
+    }
+  }, [product, information, init]);
+
+  async function fetchCategories() {
+    let response = await adminApiService.getCategories();
+    setCategories(response.status == 200 ? response.data.result : []);
+  }
+  async function fetchBrands() {
+    let response = await adminApiService.getBrands();
+    setBrands(response.status == 200 ? response.data.result : []);
   }
 
   const handleChange = useCallback((event) => {
@@ -114,39 +115,64 @@ export const ProductDetails = ({ productInformation }) => {
   };
 
   const setStartDate = (date) => {
-    information.offerDate = {
-      startDate: date,
-      endDate: date,
-    };
-    setInformation(information);
+    setInformation((prevState) => ({
+      ...prevState,
+      offerDate: {
+        ...prevState.offerDate,
+        startDate: date,
+      },
+    }));
   };
 
   const setEndDate = (date) => {
     if (date > information.offerDate.startDate) {
-      information.offerDate = {
-        startDate: information.offerDate.startDate,
-        endDate: date,
-      };
-      setInformation(information);
+      setInformation((prevState) => ({
+        ...prevState,
+        offerDate: {
+          ...prevState.offerDate,
+          endDate: date,
+        },
+      }));
     }
   };
 
-  const tagsChange = (tags) => {
-    information.tags = tags;
-    setInformation(information);
-  };
-
-  const sizesChange = (tags) => {
-    information.tags = tags;
-    setInformation(information);
-  };
+  const selectBrand = useCallback((event) => {
+    const { value } = event.target;
+    setBrand(value);
+  }, []);
 
   const handleCheckBox = (event) => {
     setChecked(event.target.checked);
+    setInformation((prevState) => ({
+      ...prevState,
+      featured: !checked,
+    }));
   };
-  const handleSubmit = useCallback((event) => {
-    event.preventDefault();
-  }, []);
+
+  function handleSubmit() {
+    const selectedCategory = categories.find(
+      (option) => option.productType == information.productType
+    );
+    const selectedBrand = brands.find((option) => option.name == brand);
+    const updatedData = {
+      ...information,
+      tags: tags,
+      sizes: sizes,
+      category: {
+        id: selectedCategory._id,
+        name: selectedCategory.productType,
+      },
+      brand: {
+        id: selectedBrand._id,
+        name: selectedBrand.name,
+      },
+    };
+
+    setTimeout(() => {
+      // console.log(updatedData);
+      submitForm(updatedData);
+    }, 500);
+  }
 
   return (
     <form autoComplete="off" noValidate onSubmit={handleSubmit}>
@@ -179,42 +205,52 @@ export const ProductDetails = ({ productInformation }) => {
                 />
               </Grid>
 
-              <Grid xs={12} md={6}>
+              <Grid xs={12} md={4}>
                 <TextField
                   fullWidth
                   label="Select Brand"
-                  name="status"
-                  onChange={handleChange}
+                  name="brand"
+                  onChange={selectBrand}
                   required
                   select
                   SelectProps={{ native: true }}
-                  value={information.brand}
+                  value={brand}
                 >
-                  {Brands.map((option) => (
-                    <option key={option.value} value={option.value}>
-                      {option.label}
+                  {brands.map((option) => (
+                    <option key={option._id} value={option.name}>
+                      {option.name}
                     </option>
                   ))}
                 </TextField>
               </Grid>
 
-              <Grid xs={12} md={6}>
+              <Grid xs={12} md={4}>
                 <TextField
                   fullWidth
                   label="Select Category"
-                  name="status"
+                  name="productType"
                   onChange={handleChange}
                   required
                   select
                   SelectProps={{ native: true }}
-                  value={information.category}
+                  value={information.productType}
                 >
-                  {Categories.map((option) => (
-                    <option key={option.value} value={option.value}>
-                      {option.label}
+                  {categories.map((option) => (
+                    <option key={option._id} value={option.productType}>
+                      {option.productType}
                     </option>
                   ))}
                 </TextField>
+              </Grid>
+              <Grid xs={12} md={4}>
+                <TextField
+                  fullWidth
+                  label="Parent"
+                  name="parent"
+                  onChange={handleChange}
+                  value={information.parent}
+                  required
+                />
               </Grid>
               <Grid xs={12} md={3}>
                 <TextField
@@ -292,8 +328,8 @@ export const ProductDetails = ({ productInformation }) => {
 
               <Grid xs={10} md={12}>
                 <TagsInputComponent
-                  tags={information.sizes}
-                  onTagsChange={sizesChange}
+                  tags={sizes}
+                  onTagsChange={setSizes}
                   placeholder={"Add Size"}
                   max={15}
                 />
@@ -301,8 +337,8 @@ export const ProductDetails = ({ productInformation }) => {
 
               <Grid xs={10} md={12}>
                 <TagsInputComponent
-                  tags={information.tags}
-                  onTagsChange={tagsChange}
+                  tags={tags}
+                  onTagsChange={setTags}
                   placeholder={"Add a Tag"}
                   max={25}
                 />
@@ -327,7 +363,9 @@ export const ProductDetails = ({ productInformation }) => {
         </CardContent>
         <Divider />
         <CardActions sx={{ justifyContent: "flex-end" }}>
-          <Button variant="contained">Save details</Button>
+          <Button variant="contained" onClick={handleSubmit}>
+            Save details
+          </Button>
         </CardActions>
       </Card>
     </form>

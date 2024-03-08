@@ -84,6 +84,7 @@ const Page = () => {
               onRowsPerPageChange={handleRowsPerPageChange}
               page={page}
               rowsPerPage={rowsPerPage}
+              refresh={initProducts}
             />
           </Stack>
         </Container>

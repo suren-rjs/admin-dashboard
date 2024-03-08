@@ -1,6 +1,6 @@
 /* eslint-disable react/jsx-max-props-per-line */
 import PropTypes from "prop-types";
-import { format } from "date-fns";
+import { format, parseISO } from "date-fns";
 import {
   Box,
   Card,
@@ -23,7 +23,9 @@ export const ProductsTable = (props) => {
     onRowsPerPageChange,
     page = 0,
     rowsPerPage = 0,
+    refresh = () => {},
   } = props;
+
   const formatter = new Intl.NumberFormat("en-US", {
     style: "currency",
     currency: "USD",
@@ -46,20 +48,20 @@ export const ProductsTable = (props) => {
             </TableHead>
             <TableBody>
               {items.map((product) => {
-                const createdAt = format(product.createdAt, "dd/MM/yyyy");
+                const createdAt = format(parseISO(product.createdAt), "dd/MM/yyyy");
                 const formattedCurrency = formatter.format(3000);
 
                 return (
                   <TableRow hover key={product.id}>
                     <TableCell>
-                      <Typography variant="subtitle2">{product.name}</Typography>
+                      <Typography variant="subtitle2">{product.title}</Typography>
                     </TableCell>
-                    <TableCell>Some Description here ...</TableCell>
+                    <TableCell>{product.description}</TableCell>
                     <TableCell>{createdAt}</TableCell>
                     <TableCell>{createdAt}</TableCell>
                     <TableCell>{formattedCurrency}</TableCell>
                     <TableCell>
-                      <ProductIconGroup id={product.id}></ProductIconGroup>
+                      <ProductIconGroup id={product._id} refresh={refresh}></ProductIconGroup>
                     </TableCell>
                   </TableRow>
                 );

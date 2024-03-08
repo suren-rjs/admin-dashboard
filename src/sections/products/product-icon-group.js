@@ -8,14 +8,17 @@ import "rsuite/dist/rsuite.min.css";
 import { CallBackIconButton } from "../common/callback-icon-button";
 import { Stack } from "@mui/material";
 import { useRouter } from "next/router";
+import adminApiService from "src/services/admin-api-service";
 
-export const ProductIconGroup = ({ id }) => {
+export const ProductIconGroup = ({ id, refresh }) => {
   const router = useRouter();
   function editProduct() {
     router.push(`/products/${id}`);
   }
-  function deleteProduct() {
-    router.push(`/products`);
+
+  async function deleteProduct() {
+    await adminApiService.deleteProductById(id);
+    refresh();
   }
   return (
     <div className="App" style={{ textAlign: "center" }}>

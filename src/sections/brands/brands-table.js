@@ -35,10 +35,9 @@ export const BrandsTable = (props) => {
             <TableHead>
               <TableRow>
                 <TableCell>BRAND</TableCell>
-                <TableCell>DESCRIPTION</TableCell>
+                <TableCell>LOCATION</TableCell>
                 <TableCell>EMAIL</TableCell>
                 <TableCell>WEBSITE</TableCell>
-                <TableCell>STATUS</TableCell>
                 <TableCell>Actions</TableCell>
               </TableRow>
             </TableHead>
@@ -73,7 +72,7 @@ export const BrandsTable = (props) => {
                         <Typography variant="subtitle1">{brand.name}</Typography>
                       </Stack>
                     </TableCell>
-                    <TableCell>{brand.description}</TableCell>
+                    <TableCell>{brand.location}</TableCell>
                     <TableCell>{brand.email}</TableCell>
                     <TableCell>
                       <a
@@ -87,7 +86,6 @@ export const BrandsTable = (props) => {
                         {brand.website}
                       </a>
                     </TableCell>
-                    <TableCell>{brand.status}</TableCell>
                     <TableCell>
                       <BrandsIconGroup id={brand._id} refresh={refresh}></BrandsIconGroup>
                     </TableCell>

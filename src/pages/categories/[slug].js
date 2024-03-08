@@ -85,7 +85,7 @@ const Page = ({ category }) => {
               <Stack direction="row" spacing={1}>
                 <Button onClick={navigateDashboard}>Dashboard</Button>
                 <Button onClick={navigateProducts}>Categories</Button>
-                <Button disabled>{category ? category.id : "add"}</Button>
+                <Button disabled>{category ? category._id : "add"}</Button>
               </Stack>
             </div>
             <div>
