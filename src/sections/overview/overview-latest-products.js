@@ -1,8 +1,8 @@
 /* eslint-disable react/jsx-max-props-per-line */
-import { formatDistanceToNow } from 'date-fns';
-import PropTypes from 'prop-types';
-import ArrowRightIcon from '@heroicons/react/24/solid/ArrowRightIcon';
-import EllipsisVerticalIcon from '@heroicons/react/24/solid/EllipsisVerticalIcon';
+import { formatDistanceToNow, parseISO } from "date-fns";
+import PropTypes from "prop-types";
+import ArrowRightIcon from "@heroicons/react/24/solid/ArrowRightIcon";
+import EllipsisVerticalIcon from "@heroicons/react/24/solid/EllipsisVerticalIcon";
 import {
   Box,
   Button,
@@ -15,8 +15,8 @@ import {
   ListItem,
   ListItemAvatar,
   ListItemText,
-  SvgIcon
-} from '@mui/material';
+  SvgIcon,
+} from "@mui/material";
 import { useRouter } from "next/router";
 
 export const OverviewLatestProducts = (props) => {
@@ -33,15 +33,15 @@ export const OverviewLatestProducts = (props) => {
       <List>
         {products.map((product, index) => {
           const hasDivider = index < products.length - 1;
-          const ago = formatDistanceToNow(product.updatedAt);
+          const ago = formatDistanceToNow(parseISO(product.updatedAt));
 
           return (
-            <ListItem divider={hasDivider} key={product.id}>
+            <ListItem divider={hasDivider} key={product._id}>
               <ListItemAvatar>
-                {product.image ? (
+                {product.img ? (
                   <Box
                     component="img"
-                    src={product.image}
+                    src={product.img}
                     sx={{
                       borderRadius: 1,
                       height: 48,

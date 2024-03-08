@@ -1,5 +1,5 @@
 /* eslint-disable react/jsx-max-props-per-line */
-import React, { useContext, useEffect, useState } from "react";
+import React, { useContext } from "react";
 import Head from "next/head";
 import { Box, Container, Unstable_Grid2 as Grid } from "@mui/material";
 import { Layout as DashboardLayout } from "src/layouts/dashboard/layout";
@@ -13,25 +13,8 @@ import adminApiService from "src/services/admin-api-service";
 
 const now = new Date();
 
-const Page = ({}) => {
+const Page = ({ ordersUpdated = [], productsUpdated = [] }) => {
   const auth = useContext(AuthContext);
-  const [products, setProducts] = useState([]);
-  const [orders, setOrders] = useState([]);
-
-  useEffect(() => {
-    updateProducts();
-    updateOrders();
-  }, []);
-
-  async function updateProducts() {
-    const response = await adminApiService.getProducts();
-    setProducts(response.success ? response.date : []);
-  }
-
-  async function updateOrders() {
-    const response = await adminApiService.getOrders();
-    setOrders(response.success ? response.data : []);
-  }
 
   return (
     <>
@@ -62,10 +45,10 @@ const Page = ({}) => {
               <OverviewTotalProfit sx={{ height: "100%" }} value="$15k" />
             </Grid>
             <Grid xs={12} md={6} lg={4}>
-              <OverviewLatestProducts products={products} sx={{ height: "100%" }} />
+              <OverviewLatestProducts products={productsUpdated} sx={{ height: "100%" }} />
             </Grid>
             <Grid xs={12} md={12} lg={8}>
-              <OverviewLatestOrders orders={orders} sx={{ height: "100%" }} />
+              <OverviewLatestOrders orders={ordersUpdated} sx={{ height: "100%" }} />
             </Grid>
           </Grid>
         </Container>
@@ -77,3 +60,35 @@ const Page = ({}) => {
 Page.getLayout = (page) => <DashboardLayout>{page}</DashboardLayout>;
 
 export default Page;
+
+// This gets called on every request
+export async function getServerSideProps() {
+  try {
+    // Fetch orders and products concurrently
+    const [ordersRes, productsRes] = await Promise.all([
+      adminApiService.getOrders(),
+      adminApiService.getProducts(),
+    ]);
+
+    // Extract data from responses
+    const ordersData = ordersRes.data.data;
+    const productsData = productsRes.data.data;
+
+    // Return data as props
+    return {
+      props: {
+        ordersUpdated: ordersData,
+        productsUpdated: productsData,
+      },
+    };
+  } catch (error) {
+    console.error("Error fetching data:", error.message);
+    // If an error occurs, return default values as props
+    return {
+      props: {
+        ordersUpdated: null,
+        productsUpdated: null,
+      },
+    };
+  }
+}

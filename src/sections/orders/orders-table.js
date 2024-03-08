@@ -1,6 +1,6 @@
 /* eslint-disable react/jsx-max-props-per-line */
 import PropTypes from "prop-types";
-import { format } from "date-fns";
+import { format, parseISO } from "date-fns";
 import {
   Box,
   Card,
@@ -54,7 +54,7 @@ export const OrdersTable = (props) => {
             </TableHead>
             <TableBody>
               {items.map((order) => {
-                const createdAt = format(order.createdAt, "dd/MM/yyyy");
+                const createdAt = format(parseISO(order.createdAt), "dd/MM/yyyy");
 
                 return (
                   <TableRow hover key={order.id}>
