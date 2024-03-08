@@ -1,6 +1,6 @@
-import { format } from 'date-fns';
-import PropTypes from 'prop-types';
-import ArrowRightIcon from '@heroicons/react/24/solid/ArrowRightIcon';
+import { format, parseISO } from "date-fns";
+import PropTypes from "prop-types";
+import ArrowRightIcon from "@heroicons/react/24/solid/ArrowRightIcon";
 import {
   Box,
   Button,
@@ -13,12 +13,13 @@ import {
   TableBody,
   TableCell,
   TableHead,
-  TableRow
-} from '@mui/material';
-import { Scrollbar } from 'src/components/scrollbar';
-import { SeverityPill } from 'src/components/severity-pill';
+  TableRow,
+} from "@mui/material";
+import { Scrollbar } from "src/components/scrollbar";
+import { SeverityPill } from "src/components/severity-pill";
 import { useRouter } from "next/router";
-import { appCOnstants } from 'src/utils/constants';
+import { appCOnstants } from "src/utils/constants";
+import { useEffect } from "react";
 
 export const OverviewLatestOrders = (props) => {
   const { orders = [], sx } = props;
@@ -28,6 +29,10 @@ export const OverviewLatestOrders = (props) => {
     router.push("/orders");
   }
 
+  useEffect(() => {
+    console.log("Components Updated", props);
+  });
+
   return (
     <Card sx={sx}>
       <CardHeader title="Latest Orders" />
@@ -36,7 +41,7 @@ export const OverviewLatestOrders = (props) => {
           <Table>
             <TableHead>
               <TableRow>
-                <TableCell>Order</TableCell>
+                <TableCell>Invoice</TableCell>
                 <TableCell>Customer</TableCell>
                 <TableCell sortDirection="desc">Date</TableCell>
                 <TableCell>Status</TableCell>
@@ -44,16 +49,18 @@ export const OverviewLatestOrders = (props) => {
             </TableHead>
             <TableBody>
               {orders.map((order) => {
-                const createdAt = format(order.createdAt, "dd/MM/yyyy");
+                const createdAt = format(parseISO(order.createdAt), "dd/MM/yyyy");
 
                 return (
                   // eslint-disable-next-line react/jsx-max-props-per-line
-                  <TableRow hover key={order.id}>
-                    <TableCell>{order.ref}</TableCell>
-                    <TableCell>{order.customer.name}</TableCell>
+                  <TableRow hover key={order._id}>
+                    <TableCell>{order.invoice}</TableCell>
+                    <TableCell>{order.name}</TableCell>
                     <TableCell>{createdAt}</TableCell>
                     <TableCell>
-                      <SeverityPill color={appCOnstants.statusMap[order.status]}>{order.status}</SeverityPill>
+                      <SeverityPill color={appCOnstants.statusMap[order.status]}>
+                        {order.status}
+                      </SeverityPill>
                     </TableCell>
                   </TableRow>
                 );
@@ -84,5 +91,5 @@ export const OverviewLatestOrders = (props) => {
 
 OverviewLatestOrders.prototype = {
   orders: PropTypes.array,
-  sx: PropTypes.object
+  sx: PropTypes.object,
 };
