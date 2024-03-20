@@ -46,7 +46,7 @@ const Page = () => {
   return (
     <>
       <Head>
-        <title>Brands | Shofy jewellery</title>
+        <title>Brands | Wesellvelli </title>
       </Head>
       <Box
         component="main"

@@ -37,15 +37,15 @@ export const items = [
       </SvgIcon>
     ),
   },
-  {
-    title: "Coupons",
-    path: "/coupons",
-    icon: (
-      <SvgIcon fontSize="small">
-        <CouponIcon />
-      </SvgIcon>
-    ),
-  },
+  // {
+  //   title: "Coupons",
+  //   path: "/coupons",
+  //   icon: (
+  //     <SvgIcon fontSize="small">
+  //       <CouponIcon />
+  //     </SvgIcon>
+  //   ),
+  // },
   {
     title: "Brands",
     path: "/brands",

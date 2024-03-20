@@ -19,7 +19,7 @@ const Page = ({ order }) => {
   return (
     <>
       <Head>
-        <title>Account | Shofy jewellery</title>
+        <title>Account | Wesellvelli </title>
         <link rel="stylesheet" href="style.css" />
         <link
           rel="stylesheet"

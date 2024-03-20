@@ -7,41 +7,26 @@ import { AccountProfileDetails } from 'src/sections/account/account-profile-deta
 const Page = () => (
   <>
     <Head>
-      <title>
-        Account | Shofy jewellery
-      </title>
+      <title>Account | Wesellvelli</title>
     </Head>
     <Box
       component="main"
       sx={{
         flexGrow: 1,
-        py: 8
+        py: 8,
       }}
     >
       <Container maxWidth="lg">
         <Stack spacing={3}>
           <div>
-            <Typography variant="h4">
-              Account
-            </Typography>
+            <Typography variant="h4">Account</Typography>
           </div>
           <div>
-            <Grid
-              container
-              spacing={3}
-            >
-              <Grid
-                xs={12}
-                md={6}
-                lg={4}
-              >
+            <Grid container spacing={3}>
+              <Grid xs={12} md={6} lg={4}>
                 <AccountProfile />
               </Grid>
-              <Grid
-                xs={12}
-                md={6}
-                lg={8}
-              >
+              <Grid xs={12} md={6} lg={8}>
                 <AccountProfileDetails />
               </Grid>
             </Grid>

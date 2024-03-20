@@ -19,7 +19,7 @@ const Page = ({ ordersUpdated = [], productsUpdated = [] }) => {
   return (
     <>
       <Head>
-        <title>Overview | Shofy Jwelleries</title>
+        <title>Overview | Wesellvelli </title>
       </Head>
       <Box
         component="main"

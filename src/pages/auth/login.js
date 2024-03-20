@@ -57,7 +57,7 @@ const Page = () => {
   return (
     <>
       <Head>
-        <title>Login | Shofy jewellery</title>
+        <title>Login | Wesellvelli </title>
       </Head>
       <Box
         sx={{
