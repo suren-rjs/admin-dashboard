@@ -4,9 +4,8 @@ import Head from "next/head";
 import { Box, Container, Stack, Button, Typography, Unstable_Grid2 as Grid } from "@mui/material";
 import { Layout as DashboardLayout } from "src/layouts/dashboard/layout";
 import { useRouter } from "next/router";
-import { CategoryImage } from "src/sections/category-form/category-image";
-import { CategoryDetails } from "src/sections/category-form/category-form";
 import { OrderDetails } from "src/sections/orders/order-form";
+import adminApiService from "src/services/admin-api-service";
 
 const Page = ({ order }) => {
   const router = useRouter();
@@ -36,7 +35,7 @@ const Page = ({ order }) => {
         <Container maxWidth="lg">
           <Stack spacing={3}>
             <div>
-              <Typography variant="h4">{"Order: " + (order?.id ?? "Invalid order")}</Typography>
+              <Typography variant="h4">{"Order: " + (order?._id ?? "Invalid order")}</Typography>
               <hr />
               <Stack direction="row" spacing={1}>
                 <Button onClick={navigateDashboard}>Dashboard</Button>
@@ -66,8 +65,9 @@ export async function getServerSideProps(window) {
   console.log(window.query.slug);
   let data = null;
   try {
-    const res = await fetch(``);
-    data = await res.json();
+    const res = await adminApiService.getOrder(window.query.slug);
+    data = res.data;
+    data.isEdit = true;
   } catch (error) {}
   return { props: { order: data } };
 }

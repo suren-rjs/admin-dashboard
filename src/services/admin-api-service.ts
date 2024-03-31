@@ -43,6 +43,39 @@ class AdminApiService {
     }
   }
 
+  async getOrder(id: String): Promise<AxiosResponse> {
+    try {
+      return await axios.get(`${baseUrl}/order/${id}`);
+    } catch (error) {
+      throw error.response?.data;
+    }
+  }
+
+  // ["processing", "delivered",'cancel'],
+  async acceptOrder(id: String): Promise<AxiosResponse> {
+    try {
+      return await axios.patch(`${baseUrl}/order/update-status/${id}`, { status: "processing" });
+    } catch (error) {
+      throw error.response?.data;
+    }
+  }
+
+  async deliverOrder(id: String): Promise<AxiosResponse> {
+    try {
+      return await axios.patch(`${baseUrl}/order/update-status/${id}`, { status: "delivered" });
+    } catch (error) {
+      throw error.response?.data;
+    }
+  }
+
+  async cancelOrder(id: String): Promise<AxiosResponse> {
+    try {
+      return await axios.patch(`${baseUrl}/order/update-status/${id}`, { status: "cancel" });
+    } catch (error) {
+      throw error.response?.data;
+    }
+  }
+
   async getProducts(): Promise<AxiosResponse> {
     try {
       return await axios.get(`${baseUrl}/product/all`);

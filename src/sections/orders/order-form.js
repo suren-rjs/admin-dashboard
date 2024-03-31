@@ -1,5 +1,5 @@
 /* eslint-disable react/jsx-max-props-per-line */
-import { useCallback, useState } from "react";
+import { useCallback, useEffect, useState } from "react";
 import {
   Box,
   Button,
@@ -11,8 +11,12 @@ import {
   TextField,
   Unstable_Grid2 as Grid,
   InputAdornment,
+  Typography,
 } from "@mui/material";
 import AccountCircle from "@mui/icons-material/AccountCircle";
+import adminApiService from "src/services/admin-api-service";
+import { SeverityPill } from "src/components/severity-pill";
+import { appCOnstants } from "src/utils/constants";
 
 // pending", "processing", "delivered",'cancel
 const Status = [
@@ -34,55 +38,25 @@ const Status = [
   },
 ];
 
-const Categories = [
-  {
-    value: "type-1",
-    label: "TYPE 1",
-  },
-  {
-    value: "type-2",
-    label: "TYPE 2",
-  },
-  {
-    value: "type-3",
-    label: "TYPE 3",
-  },
-];
-
 export const OrderDetails = ({ order }) => {
   const [checked, setChecked] = useState(false);
-  const [information, setInformation] = useState({
-    user: "611f2b987d048d10e4e60d53",
-    cart: [
-      {
-        productId: "45678",
-        quantity: 2,
-      },
-    ],
-    name: "David Wilson",
-    address: "333 Oak Street",
-    email: "davidwilson@example.com",
-    contact: "666-999-3333",
-    city: "Boston",
-    country: "USA",
-    zipCode: "02101",
-    subTotal: 90.0,
-    shippingCost: 10.0,
-    discount: 5.0,
-    totalAmount: 95.0,
-    shippingOption: "Standard",
-    cardInfo: {},
-    paymentIntent: {},
-    paymentMethod: "Debit Card",
-    orderNote: "No contact delivery preferred",
-    invoice: 123987456,
-    createdAt: new Date(),
-    status: "delivered",
-  });
+  const [information, setInformation] = useState(null);
+  const [buttonText, setButtonText] = useState("Accept Order");
+  const [orderStatus, setOrderStatus] = useState("pending");
 
-  if (order != null) {
-    setInformation(order);
-  }
+  useEffect(() => {
+    if (order != null) {
+      setInformation(order);
+      setOrderStatus(order?.status ?? "pending");
+      if (orderStatus == "pending") {
+        setButtonText("Accept Order");
+      } else if (orderStatus == "processing") {
+        setButtonText("Move to delivered");
+      } else if (orderStatus == "delivered") {
+        setButtonText("Completed");
+      }
+    }
+  }, [order, orderStatus]);
 
   const handleChange = useCallback((event) => {
     const { name, value } = event.target;
@@ -96,17 +70,73 @@ export const OrderDetails = ({ order }) => {
     event.preventDefault();
   }, []);
 
+  function viewInvoice(id) {
+    let url = `https://shopify-eta-flame.vercel.app/order/${id}`;
+    window.open(url, "_blank");
+  }
+
+  async function moveOrder(id) {
+    if (orderStatus == "pending") {
+      await adminApiService.acceptOrder(id);
+      window.location.reload();
+    } else if (orderStatus == "processing") {
+      await adminApiService.deliverOrder(id);
+      window.location.reload();
+    }
+  }
+
+  async function cancelOrder(id) {
+    await adminApiService.cancelOrder(id);
+    window.location.reload();
+  }
+
   return (
     <form autoComplete="off" noValidate onSubmit={handleSubmit}>
       <Card>
-        <CardHeader title="Products" />
-        <div>
-          <ul>
-            {information.cart.map((item, index) => (
-              <li key={index}>{item.productId}</li>
-            ))}
-          </ul>
-        </div>
+        <CardHeader title="Order Details" />
+        <CardContent sx={{ pt: 0 }} width={"50px"}>
+          <Box sx={{ m: -1.5 }}>
+            <Grid container spacing={3}>
+              <Grid xs={4} sx={{ m: 1.5 }}>
+                <Typography variant="h6">
+                  Status:
+                  <SeverityPill color={appCOnstants.statusMap[order.status]}>
+                    {order.status}
+                  </SeverityPill>
+                </Typography>
+              </Grid>
+              <Grid xs={4}>
+                <TextField
+                  fullWidth
+                  label="Shipping Cost"
+                  name="shippingCost"
+                  value={information?.shippingCost}
+                />
+              </Grid>
+              <Grid xs={4}>
+                <TextField
+                  fullWidth
+                  label="Sub Total"
+                  name="subTotal"
+                  value={information?.subTotal}
+                />
+              </Grid>
+              <Grid xs={4}>
+                <TextField
+                  fullWidth
+                  label="Total Amount"
+                  name="totalAmount"
+                  value={information?.totalAmount}
+                />
+              </Grid>
+              <CardActions sx={{ justifyContent: "flex-end" }}>
+                <Button variant="contained" onClick={() => viewInvoice(information?._id)}>
+                  View Invoice
+                </Button>
+              </CardActions>
+            </Grid>
+          </Box>
+        </CardContent>
         <CardHeader title="Payment Information" />
         <CardContent sx={{ pt: 0 }} width={"50px"}>
           <Box sx={{ m: -1.5 }}>
@@ -116,7 +146,7 @@ export const OrderDetails = ({ order }) => {
                   fullWidth
                   label="Customer Name"
                   name="name"
-                  value={information.name}
+                  value={information?.name}
                   InputProps={{
                     startAdornment: (
                       <InputAdornment position="start">
@@ -127,23 +157,23 @@ export const OrderDetails = ({ order }) => {
                 />
               </Grid>
               <Grid xs={4}>
-                <TextField fullWidth label="Address" name="address" value={information.address} />
+                <TextField fullWidth label="Address" name="address" value={information?.address} />
               </Grid>
               <Grid xs={4}>
-                <TextField fullWidth label="Zip Code" name="zipCode" value={information.zipCode} />
+                <TextField fullWidth label="Zip Code" name="zipCode" value={information?.zipCode} />
               </Grid>
               <Grid xs={4}>
-                <TextField fullWidth label="Email" name="email" value={information.email} />
+                <TextField fullWidth label="Email" name="email" value={information?.email} />
               </Grid>
               <Grid xs={4}>
-                <TextField fullWidth label="Contact" name="contact" value={information.contact} />
+                <TextField fullWidth label="Contact" name="contact" value={information?.contact} />
               </Grid>
               <Grid xs={4}>
                 <TextField
                   fullWidth
                   label="City, Country"
                   name="zipCode"
-                  value={`${information.city}, ${information.country}`}
+                  value={`${information?.city}, ${information?.country}`}
                 />
               </Grid>
               <Grid xs={10} md={12}>
@@ -152,7 +182,7 @@ export const OrderDetails = ({ order }) => {
                   label="Order Note"
                   name="orderNote"
                   multiline
-                  value={information.orderNote}
+                  value={information?.orderNote}
                 />
               </Grid>
               <Grid xs={4}>
@@ -160,7 +190,7 @@ export const OrderDetails = ({ order }) => {
                   fullWidth
                   label="Payment Method"
                   name="pamentMethod"
-                  value={information.paymentMethod}
+                  value={information?.paymentMethod}
                 />
               </Grid>
               <Grid xs={4}>
@@ -168,11 +198,8 @@ export const OrderDetails = ({ order }) => {
                   fullWidth
                   label="Shipping Option"
                   name="shippingOption"
-                  value={information.shippingOption}
+                  value={information?.shippingOption}
                 />
-              </Grid>
-              <Grid xs={4}>
-                <TextField fullWidth label="Invoice" name="invoice" value={information.invoice} />
               </Grid>
               <Grid xs={4}></Grid>
             </Grid>
@@ -180,8 +207,20 @@ export const OrderDetails = ({ order }) => {
         </CardContent>
         <Divider />
         <CardActions sx={{ justifyContent: "flex-end" }}>
-          <Button variant="contained">Move Order</Button>
-          <Button variant="contained">Cancel Order</Button>
+          <Button
+            variant="contained"
+            disabled={["cancel", "delivered"].includes(orderStatus)}
+            onClick={() => moveOrder(information._id)}
+          >
+            {buttonText}
+          </Button>
+          <Button
+            variant="contained"
+            disabled={["cancel", "delivered"].includes(orderStatus)}
+            onClick={() => cancelOrder(information._id)}
+          >
+            Cancel Order
+          </Button>
         </CardActions>
       </Card>
     </form>

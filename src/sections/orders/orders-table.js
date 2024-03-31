@@ -74,7 +74,7 @@ export const OrdersTable = (props) => {
                       </SeverityPill>
                     </TableCell>
                     <TableCell>
-                      <Button onClick={() => navigateToOrder(order.user)}>view order</Button>
+                      <Button onClick={() => navigateToOrder(order._id)}>view order</Button>
                     </TableCell>
                   </TableRow>
                 );
